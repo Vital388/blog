@@ -11,7 +11,11 @@ $(document).ready(function (event) {
                 type: 'DELETE',
                 url: 'http://nameless-dawn-6859.herokuapp.com/posts/' + postId,
                 success: function (data) {
-                    $('.alert').html('<p>Post deleted by id ' + (data.id ? data.id : data));
+
+                    $('.alert').show("fast", function () {
+                        // use callee so don't have to name the function
+                        $('.alert').html('<p>Post deleted by id ' + (data.id ? data.id : data));
+                    });
 
                     $('.post#' + postId).hide(1500, function () {
                         $(this).remove();
@@ -19,7 +23,11 @@ $(document).ready(function (event) {
                 }
             })
         } else {
-            $('.alert').html('<p>Post not created ');
+
+            $('.alert').show("fast", function () {
+                // use callee so don't have to name the function
+                $('.alert').html('<p>Post not created ');
+            });
         }
     });
     $('.addpost').click(function (event) {
@@ -38,7 +46,11 @@ $(document).ready(function (event) {
             success: function (data) {
                 $('.update').attr("id", data.id);
                 $('.delete').attr("id", data.id);
-                $('.alert').html('<p>Post added by id ' + data.id);
+
+                $('.alert').show("fast", function () {
+                    // use callee so don't have to name the function
+                    $('.alert').html('<p>Post added by id ' + data.id);
+                });
             }
         })
 
@@ -58,7 +70,10 @@ $(document).ready(function (event) {
                     excerption: excerption
                 },
                 success: function (data) {
-                    $('.alert').html('<p>Post updated by id ' + (data.id ? data.id : data));
+                    $('.alert').show("fast", function () {
+                        // use callee so don't have to name the function
+                        $('.alert').html('<p>Post updated by id ' + (data.id ? data.id : data));
+                    });
                 }
             })
         } else {

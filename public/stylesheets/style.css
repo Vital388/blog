@@ -124,4 +124,5 @@ body {
     display: inline-block;
     background: #FFE4E1;
     border-radius: 7px;
+    visibility: hidden;
 }
