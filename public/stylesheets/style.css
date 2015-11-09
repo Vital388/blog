@@ -114,3 +114,14 @@ body {
     background:#FFFAF0;
     color: #696969;
 }
+
+.alert {
+    position: fixed;
+    top: 10px;
+    right: 25%;
+    margin: 10px;
+    padding: 7px;
+    display: inline-block;
+    background: #FFE4E1;
+    border-radius: 7px;
+}
