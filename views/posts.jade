@@ -13,8 +13,8 @@ block content
                         div.short
                             p=post ? post.excerption : ''
                         div.links
-                            a(href='http://localhost:3000/posts/' + post.id) Read post
-                            a(href='http://localhost:3000/posts/create?id=' + post.id) Updete post
+                            a(href='http://agile-headland-3332.herokuapp.com/posts/' + post.id) Read post
+                            a(href='http://agile-headland-3332.herokuapp.com/posts/create?id=' + post.id) Updete post
                             label.delete(id=post.id) Delete post
         div.newpost
-            a(href='http://localhost:3000/posts/create') New post
+            a(href='http://agile-headland-3332.herokuapp.com/posts/create') New post
