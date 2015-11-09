@@ -1,0 +1,25 @@
+//
+   Created by Lollypop on 04.11.2015.
+
+extends layout
+block content
+    script(src='/javascripts/jquery-1.11.3.js')
+    script(src='/javascripts/post.js')
+    div.mainblock
+        div.postblock
+            div.post
+                div.posttitle
+                    h4 Enter Title
+                    input.newposttitle(type='text' value=post? post[0].title : '')
+                div.body
+                    h4 Input you text
+                    textarea.newpostbody=post ? post[0].body : ''
+                div.short
+                    h4 Input short text
+                    textarea.excerption=post ? post[0].excerption : ''
+                div.links
+                    a(href='http://localhost:3000/posts/') All posts
+                    label.addpost(id=post?post[0].id:'') Add post
+                    label.update(id=post?post[0].id:'') Update post
+                    label.delete(id=post?post[0].id:'') Delete post
+                div.alert

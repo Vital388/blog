@@ -1,0 +1,19 @@
+//
+   Created by Lollypop on 04.11.2015.
+
+extends layout
+block content
+    script(src='/javascripts/jquery-1.11.3.js')
+    script(src='/javascripts/post.js')
+    div.mainblock
+        div.postblock
+            div.post
+                div.posttitle
+                    h1=post[0].title
+                div.body
+                    p=post[0].body
+                div.links
+                    a(href='http://localhost:3000/posts/') All posts
+                    a(href='http://localhost:3000/posts/create?id=' + post[0].id) Updete post
+                    label.delete(id=post[0].id) Delete post
+                div.alert
