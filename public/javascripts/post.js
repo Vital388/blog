@@ -90,13 +90,14 @@ $(document).ready(function (event) {
                     // use callee so don't have to name the function
                     $('.alert').html('<p>Please complete all the fields ');
                 });
-                
+
             }
         }
             else {
+
             $('.alert').show("fast", function () {
                 // use callee so don't have to name the function
-                $('.alert').html('<p>' + data.message + (data.id ? data.id : ''));
+                $('.alert').html('<p>' + (data.message?data.message:'Post not created') + (data.id ? data.id : ''));
             });
         }
     });
