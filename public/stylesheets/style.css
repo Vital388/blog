@@ -10,7 +10,7 @@ body {
     left:25%;
     right:25%;
     background: #FFFAF0;
-
+    border: #99CCCC solid;
 }
 
 .postblock {
@@ -26,6 +26,7 @@ body {
     display: inline-block;
     background: #FFE4E1;
     border-radius: 7px;
+    border: #CC9999 solid;
 }
 
 .newpost a {
@@ -50,6 +51,7 @@ body {
 .links {
     margin: 10px;
     text-align: center;
+
 }
 
 .links a {
@@ -59,6 +61,7 @@ body {
     margin: 10px;
     text-decoration: none;
     background: #FFDAB9;
+    border: #CC9999 solid;
 }
 
 .links a:visited {
@@ -75,6 +78,7 @@ body {
     margin: 10px;
     background: #FFDAB9;
     cursor: pointer;
+    border: #CC9999 solid;
 
 }
 
@@ -116,7 +120,6 @@ body {
     background:#FFFAF0;
     color: #696969;
 }
-
 .alert {
     position: fixed;
     top: 10px;
@@ -125,5 +128,6 @@ body {
     padding: 7px;
     background: #FFE4E1;
     border-radius: 7px;
-    display: none;
+    display:none;
+    border: #CC9999 solid;
 }
