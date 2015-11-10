@@ -37,7 +37,7 @@ $(document).ready(function (event) {
         var posttitle = $('.newposttitle').val();
         var postbody = $('.newpostbody').val();
         var excerption = $('.excerption').val();
-
+        if(posttitle&&postbody&&excerption){
         $.ajax({
             type: 'POST',
             url: 'http://nameless-dawn-6859.herokuapp.com/posts/',
@@ -55,7 +55,12 @@ $(document).ready(function (event) {
                     $('.alert').html('<p>' + data.message + data.id);
                 });
             }
-        })
+        })}else{
+            $('.alert').show("fast", function () {
+                // use callee so don't have to name the function
+                $('.alert').html('<p>Please complete all the fields ');
+            });
+        }
 
     });
     $('.update').click(function (event) {
@@ -64,6 +69,7 @@ $(document).ready(function (event) {
             var posttitle = $('.newposttitle').val();
             var postbody = $('.newpostbody').val();
             var excerption = $('.excerption').val();
+            if(posttitle&&postbody&&excerption){
             $.ajax({
                 type: 'PUT',
                 url: 'http://nameless-dawn-6859.herokuapp.com/posts/' + postId,
@@ -79,7 +85,15 @@ $(document).ready(function (event) {
                     });
                 }
             })
-        } else {
+        }else{
+                $('.alert').show("fast", function () {
+                    // use callee so don't have to name the function
+                    $('.alert').html('<p>Please complete all the fields ');
+                });
+                
+            }
+        }
+            else {
             $('.alert').show("fast", function () {
                 // use callee so don't have to name the function
                 $('.alert').html('<p>' + data.message + (data.id ? data.id : ''));
