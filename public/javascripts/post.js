@@ -97,7 +97,7 @@ $(document).ready(function (event) {
 
             $('.alert').show("fast", function () {
                 // use callee so don't have to name the function
-                $('.alert').html('<p>' + (data.message?data.message:'Post not created') + (data.id ? data.id : ''));
+                $('.alert').html('<p>' + (data?data.message:'Post not created') + (data.id ? data.id : ''));
             });
         }
     });
