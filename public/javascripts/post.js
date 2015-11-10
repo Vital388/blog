@@ -14,7 +14,10 @@ $(document).ready(function (event) {
 
                     $('.alert').show("fast", function () {
                         // use callee so don't have to name the function
-                        $('.alert').html('<p>Post deleted by id ' + (data.id ? data.id : data));
+                        $('.alert').html('<p>' + data.message + (data.id ? data.id : ''));
+                        $('.newpostbody').prop("disabled", true);
+                        $('.excerption').prop("disabled", true);
+                        $('.newposttitle').prop("disabled", true);
                     });
 
                     $('.post#' + postId).hide(1500, function () {
@@ -49,7 +52,7 @@ $(document).ready(function (event) {
 
                 $('.alert').show("fast", function () {
                     // use callee so don't have to name the function
-                    $('.alert').html('<p>Post added by id ' + data.id);
+                    $('.alert').html('<p>' + data.message + data.id);
                 });
             }
         })
@@ -72,12 +75,15 @@ $(document).ready(function (event) {
                 success: function (data) {
                     $('.alert').show("fast", function () {
                         // use callee so don't have to name the function
-                        $('.alert').html('<p>Post updated by id ' + (data.id ? data.id : data));
+                        $('.alert').html('<p>' + data.message + (data.id ? data.id : ''));
                     });
                 }
             })
         } else {
-            $('.alert').html('<p>Post not created');
+            $('.alert').show("fast", function () {
+                // use callee so don't have to name the function
+                $('.alert').html('<p>' + data.message + (data.id ? data.id : ''));
+            });
         }
     });
 

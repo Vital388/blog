@@ -52,7 +52,7 @@ router.post('/', function (req, res, next) {
         }
         var posts = new posts_model({title: post.title, id: count, body: post.body, excerption:post.excerption});
         posts.save(function () {
-            res.send({id: count})
+            res.send({message:'Post created by ',id: count})
         });
     });
 
@@ -67,13 +67,13 @@ router.put('/:postId', function (req, res, next) {
         posts_model.update({id: postId}, post, function (err, raw) {
             if (err) return handleError(err);
             if (raw.nModified) {
-                res.send({id: postId});
+                res.send({message:'Post updated by ',id: postId});
             } else {
-                res.send('Not Modified');
+                res.send({message:'Post not modificated'});
             }
         })
     } else {
-        res.send('Not found');
+        res.send({message:'Post not found'});
     }
 
 });
@@ -84,9 +84,9 @@ router.delete('/:postId', function (req, res, next) {
     posts_model.remove({id: postId}, function (err, post) {
         if (post.result.n) {
             console.log(post.result.n);
-            res.send({id: postId});
+            res.send({message:'Post deleted by ',id: postId});
         } else {
-            res.send('Not found ')
+            res.send({message:'Post not found'});
         }
     })
 });
