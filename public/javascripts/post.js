@@ -65,6 +65,7 @@ $(document).ready(function (event) {
     });
     $('.update').click(function (event) {
         var postId = event.target.id;
+        var ajaxdata=null;
         if (postId) {
             var posttitle = $('.newposttitle').val();
             var postbody = $('.newpostbody').val();
@@ -79,9 +80,10 @@ $(document).ready(function (event) {
                     excerption: excerption
                 },
                 success: function (data) {
+                    ajaxdata=data;
                     $('.alert').show("fast", function () {
                         // use callee so don't have to name the function
-                        $('.alert').html('<p>' + data.message + (data.id ? data.id : ''));
+                        $('.alert').html('<p>' + ajaxdata.message + (ajaxdata.id ? ajaxdata.id : ''));
                     });
                 }
             })
@@ -97,7 +99,7 @@ $(document).ready(function (event) {
 
             $('.alert').show("fast", function () {
                 // use callee so don't have to name the function
-                $('.alert').html('<p>' + (data?data.message:'Post not created') + (data.id ? data.id : ''));
+                $('.alert').html('<p>' + (ajaxdata.message?ajaxdata.message:'Post not created') + (ajaxdata.id ? ajaxdata.id : ''));
             });
         }
     });
