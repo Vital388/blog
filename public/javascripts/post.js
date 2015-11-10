@@ -65,7 +65,7 @@ $(document).ready(function (event) {
     });
     $('.update').click(function (event) {
         var postId = event.target.id;
-        var ajaxdata=null;
+        var ajaxdata={};
         if (postId) {
             var posttitle = $('.newposttitle').val();
             var postbody = $('.newpostbody').val();
