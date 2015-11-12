@@ -12,11 +12,11 @@ mongoose.connect(DATABASE, function (error) {
 var Schema = mongoose.Schema;
 
 var blogSchema = new Schema({
-    id: Number,
     title: String,
     author: String,
     body: String,
     excerption: String,
+    category:String,
     comments: [{body: String, date: Date}],
     date: {type: Date, default: Date.now},
     hidden: Boolean,

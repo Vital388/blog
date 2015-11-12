@@ -10,7 +10,7 @@ router.get('/', function (req, res, next) {
 router.get('/create', function (req, res, next) {
     var postId = req.param('id');
 
-    posts_model.find({id: postId}, function (err, post) {
+    posts_model.find({_id: postId}, function (err, post) {
         if (post.length > 0) {
             res.render('new_post', {post: post});
         } else {
@@ -22,7 +22,7 @@ router.get('/create', function (req, res, next) {
 router.get('/:postId', function (req, res, next) {
 
     var postId = req.params.postId;
-    posts_model.find({id: postId}, function (err, post) {
+    posts_model.find({_id: postId}, function (err, post) {
         if (post.length > 0) {
             res.render('post', {post: post});
         } else {
@@ -35,26 +35,12 @@ router.get('/:postId', function (req, res, next) {
 router.post('/', function (req, res, next) {
 
     var post = req.body;
-    posts_model.find({}, 'id', function (err, doc) {
 
-        var count;
-        if (doc.length > 0) {
-
-            var min = doc[0].id;
-            var max = min;
-            for (var i = 0; i < doc.length; ++i) {
-                if (doc[i].id > max) max = doc[i].id;
-                if (doc[i].id < min) min = doc[i].id;
-            }
-            count = max + 1;
-        } else {
-            count = 1;
-        }
-        var posts = new posts_model({title: post.title, id: count, body: post.body, excerption:post.excerption});
+        var posts = new posts_model({title: post.title,body: post.body, excerption:post.excerption});
         posts.save(function () {
-            res.send({message:'Post created by ',id: count})
+           res.send({id:posts.id});
         });
-    });
+
 
 });
 
@@ -64,7 +50,7 @@ router.put('/:postId', function (req, res, next) {
     var postId = req.params.postId;
 
     if (postId) {
-        posts_model.update({id: postId}, post, function (err, raw) {
+        posts_model.update({_id: postId}, post, function (err, raw) {
             if (err) return handleError(err);
             if (raw.nModified) {
                 res.send({message:'Post updated by ',id: postId});
@@ -81,7 +67,7 @@ router.put('/:postId', function (req, res, next) {
 router.delete('/:postId', function (req, res, next) {
     var postId = req.params.postId;
 
-    posts_model.remove({id: postId}, function (err, post) {
+    posts_model.remove({_id: postId}, function (err, post) {
         if (post.result.n) {
             console.log(post.result.n);
             res.send({message:'Post deleted by ',id: postId});
