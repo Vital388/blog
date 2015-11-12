@@ -22,7 +22,7 @@ $(document).ready(function (event) {
                             $('.newposttitle').prop("disabled", true);
                         });
 
-                        $('.post#' + postId).hide(1500, function () {
+                        $('.post#' + postId).hide(500, function () {
                             $(this).remove();
                         })
                     } else {

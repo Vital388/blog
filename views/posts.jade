@@ -8,8 +8,12 @@ block content
         div.postblock
                 each post in posts
                     div.post(id=post.id)
+                        div.category
+                            a(href='/posts/?category=' + post.category)=post.category
                         div.posttitle
                             h1=post.title
+                        div.date
+                            h2=post.date
                         div.short
                             p=post ? post.excerption : ''
                         div.links

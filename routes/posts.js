@@ -3,12 +3,19 @@ var router = express.Router();
 var posts_model = require('../model/db');
 /* GET users listing. */
 router.get('/', function (req, res, next) {
-    posts_model.find(function (err, posts) {
+    var category = req.query.category;
+    if(category){
+        posts_model.find({category:category}).sort('-date').exec(function (err, posts) {
+            res.render('posts', {posts: posts});
+        })
+    }else{
+    posts_model.find().sort('-date').exec(function (err, posts) {
         res.render('posts', {posts: posts});
     })
+    }
 });
 router.get('/create', function (req, res, next) {
-    var postId = req.param('id');
+    var postId = req.query.id;
 
     posts_model.find({_id: postId}, function (err, post) {
         if (post.length > 0) {
