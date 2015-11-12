@@ -13,8 +13,8 @@ block content
                         div.short
                             p=post ? post.excerption : ''
                         div.links
-                            a(href='./' + post.id) Read post
-                            a(href='./create?id=' + post.id) Updete post
+                            a(href='/./' + post.id) Read post
+                            a(href='/./create?id=' + post.id) Updete post
                             label.delete(id=post.id) Delete post
         div.newpost
-            a(href='./create') New post
+            a(href='/./create') New post
