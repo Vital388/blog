@@ -57,6 +57,9 @@ app.use(function (err, req, res, next) {
         error: {}
     });
 });
+app.get('/cool', function(request, response) {
+    response.send(cool());
+});
 
 
 module.exports = app;
