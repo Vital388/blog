@@ -8,6 +8,9 @@ block content
     div.mainblock
         div.postblock
             div.post
+                div.category
+                    h4 Enter category name
+                    input.newcategory(type='text' value=post ? post[0].category : '')
                 div.posttitle
                     h4 Enter Title
                     input.newposttitle(type='text' value=post? post[0].title : '')

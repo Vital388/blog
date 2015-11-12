@@ -45,6 +45,7 @@ body {
 }
 
 .post {
+    text-align: center;
     margin: 10px;
 }
 
@@ -83,7 +84,7 @@ body {
 }
 
 .posttitle {
-    text-align: center;
+
     color: #6B8E23;
 }
 
