@@ -9,7 +9,7 @@ $(document).ready(function (event) {
         if (postId) {
             $.ajax({
                 type: 'DELETE',
-                url: 'http://nameless-dawn-6859.herokuapp.com/posts/' + postId,
+                url: '/posts/' + postId,
                 success: function (data) {
 
                     $('.alert').show("fast", function () {
@@ -40,7 +40,7 @@ $(document).ready(function (event) {
         if(posttitle&&postbody&&excerption){
         $.ajax({
             type: 'POST',
-            url: 'http://nameless-dawn-6859.herokuapp.com/posts/',
+            url: '/posts',
             data: {
                 title: posttitle,
                 body: postbody,
@@ -73,7 +73,7 @@ $(document).ready(function (event) {
             if(posttitle&&postbody&&excerption){
             $.ajax({
                 type: 'PUT',
-                url: 'http://nameless-dawn-6859.herokuapp.com/posts/' + postId,
+                url: '/posts/' + postId,
                 data: {
                     title: posttitle,
                     body: postbody,
