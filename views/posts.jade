@@ -9,7 +9,7 @@ block content
                 each post in posts
                     div.post(id=post.id)
                         div.category
-                            a(href='/posts/?category=' + post.category)=post.category
+                            a(href='/posts/category/' + post.category)=post.category
                         div.posttitle
                             h1=post.title
                         div.date
@@ -20,5 +20,8 @@ block content
                             a(href='/posts/' + post.id) Read post
                             a(href='/posts/create?id=' + post.id) Updete post
                             label.delete(id=post.id) Delete post
+        div.pagination
+            - for (var i = 1; i <= pages_count; i++)
+                a(href='/posts/?page='+i)=i
         div.newpost
             a(href='/posts/create') New post
