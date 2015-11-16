@@ -2,19 +2,7 @@ var express = require('express');
 var router = express.Router();
 var posts_model = require('../model/db');
 /* GET users listing. */
-router.get('/:postId', function (req, res, next) {
 
-    var postId = req.params.postId;
-
-    posts_model.find({_id: postId}, function (err, post) {
-        if (post) {
-            res.render('post', {post: post});
-        } else {
-            res.sendStatus(404);
-        }
-    });
-
-});
 router.get('/', function (req, res, next) {
     var pages_count;
     var pageNumber = req.query.page || 1;
@@ -73,7 +61,19 @@ router.get('/create', function (req, res, next) {
     })
 
 });
+router.get('/:postId', function (req, res, next) {
 
+    var postId = req.params.postId;
+
+    posts_model.find({_id: postId}, function (err, post) {
+        if (post) {
+            res.render('post', {post: post});
+        } else {
+            res.sendStatus(404);
+        }
+    });
+
+});
 
 router.post('/', function (req, res, next) {
 
