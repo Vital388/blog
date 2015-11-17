@@ -3,6 +3,8 @@ var router = express.Router();
 var posts_model = require('../model/db');
 var Busboy = require('busboy');
 var fs = require('fs');
+var path = require('path');
+var os=require('os');
 /* GET users listing. */
 
 router.get('/', function (req, res, next) {
@@ -81,21 +83,22 @@ router.post('/', function (req, res, next) {
     var busboy = new Busboy({headers: req.headers});
     var post = [];
     var saveTo;
+    var nametoSave;
     busboy.on('field', function (key, val, keyTrunc, valTrunc, encoding, contype) {
         post[key]=val;
     });
     busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
-        saveTo='./public/images/'+filename;
+        nametoSave=filename;
+        saveTo='public/images/'+nametoSave;
         file.pipe(fs.createWriteStream(saveTo));
     });
     busboy.on('finish', function () {
-        console.log('finish');
         var posts = new posts_model({
             title: post['title'],
             body: post['body'],
             excerption: post['excerption'],
             category: post['category'],
-            image:saveTo
+            image:'images/'+nametoSave
         });
         posts.save(function () {
             res.send({id: posts['_id']});
