@@ -48,16 +48,16 @@ $(document).ready(function (event) {
         var postbody = $('.newpostbody').val();
         var excerption = $('.excerption').val();
         var category = $('.newcategory').val();
+        var image=$('.newimage').val();
+        var form=new FormData($('form')[0]);
+        console.log(form);
         if (posttitle && postbody && excerption && category) {
             $.ajax({
                 type: 'POST',
                 url: '/posts',
-                data: {
-                    title: posttitle,
-                    body: postbody,
-                    excerption: excerption,
-                    category: category
-                },
+                processData: false,
+                contentType: false,
+                data: form,
                 success: function (data) {
                     $('.update').attr("id", data.id);
                     $('.delete').attr("id", data.id);
@@ -84,6 +84,7 @@ $(document).ready(function (event) {
             var postbody = $('.newpostbody').val();
             var excerption = $('.excerption').val();
             var category = $('.newcategory').val();
+            var image=$('.newimage').val();
             if (posttitle && postbody && excerption && category) {
                 $.ajax({
                     type: 'PUT',
@@ -92,7 +93,8 @@ $(document).ready(function (event) {
                         title: posttitle,
                         body: postbody,
                         excerption: excerption,
-                        category: category
+                        category: category,
+                        image:image
                     },
                     success: function (result) {
                         if (result.nModified) {

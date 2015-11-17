@@ -16,6 +16,7 @@ var blogSchema = new Schema({
     author: String,
     body: String,
     excerption: String,
+    image:String,
     category:String,
     comments: [{body: String, date: Date}],
     date: {type: Date, default: Date.now},
