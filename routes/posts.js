@@ -1,10 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var posts_model = require('../model/db');
+var model = require('../model/db');
 var Busboy = require('busboy');
 var fs = require('fs');
-var path = require('path');
-var os=require('os');
 /* GET users listing. */
 
 router.get('/', function (req, res, next) {
@@ -12,7 +10,7 @@ router.get('/', function (req, res, next) {
     var pageNumber = req.query.page || 1;
     var resultsPerPage = req.query.resultsPerPage || 5;
     var skipFrom = (pageNumber * resultsPerPage) - resultsPerPage;
-    posts_model.count({}, function (err, c) {
+    model.posts.count({}, function (err, c) {
         if (c % resultsPerPage) {
             pages_count = c / resultsPerPage + 1;
 
@@ -21,11 +19,12 @@ router.get('/', function (req, res, next) {
 
         }
 
-        posts_model.find().skip(skipFrom).limit(resultsPerPage).sort('-date').exec(function (err, posts) {
-            res.render('posts', {posts: posts, pages_count: pages_count});
-        })
-    });
+        model.posts.find().skip(skipFrom).limit(resultsPerPage).populate('image').sort('-date').exec(function (err, posts) {
+            console.log(posts);
+            res.render('posts', {posts: posts, pages_count: pages_count})
+        });
 
+    })
 
 });
 router.get('/category', function (req, res, next) {
@@ -39,7 +38,7 @@ router.get('/category/:catname', function (req, res, next) {
     var resultsPerPage = req.query.resultsPerPage || 2;
     var skipFrom = (pageNumber * resultsPerPage) - resultsPerPage;
 
-    posts_model.count({category: catname}, function (err, c) {
+    model.posts.count({category: catname}, function (err, c) {
         if (c % resultsPerPage) {
             pages_count = c / resultsPerPage + 1;
 
@@ -48,7 +47,7 @@ router.get('/category/:catname', function (req, res, next) {
 
         }
 
-        posts_model.find({category: catname}).skip(skipFrom).limit(resultsPerPage).sort('-date').exec(function (err, posts) {
+        model.posts.find({category: catname}).skip(skipFrom).limit(resultsPerPage).sort('-date').exec(function (err, posts) {
             res.render('category', {posts: posts, pages_count: pages_count});
         })
     });
@@ -56,7 +55,7 @@ router.get('/category/:catname', function (req, res, next) {
 router.get('/create', function (req, res, next) {
     var postId = req.query.id;
 
-    posts_model.find({_id: postId}, function (err, post) {
+    model.posts.find({_id: postId}, function (err, post) {
         if (post.length > 0) {
             res.render('new_post', {post: post});
         } else {
@@ -69,7 +68,7 @@ router.get('/:postId', function (req, res, next) {
 
     var postId = req.params.postId;
 
-    posts_model.find({_id: postId}, function (err, post) {
+    model.posts.find({_id: postId}, function (err, post) {
         if (post) {
             res.render('post', {post: post});
         } else {
@@ -82,27 +81,46 @@ router.get('/:postId', function (req, res, next) {
 router.post('/', function (req, res, next) {
     var busboy = new Busboy({headers: req.headers});
     var post = [];
-    var saveTo;
-    var nametoSave;
+    var images;
     busboy.on('field', function (key, val, keyTrunc, valTrunc, encoding, contype) {
-        post[key]=val;
+        post[key] = val;
     });
-    busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
-        nametoSave=filename;
-        saveTo='public/images/'+nametoSave;
-        file.pipe(fs.createWriteStream(saveTo));
+    busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
+
+        file.pipe(fs.createWriteStream('public/images/' + filename));
+        images = new model.images({
+            name: filename,
+            path: '/images/' + filename
+        });
+        images.save(function () {
+        });
+
+
     });
     busboy.on('finish', function () {
-        var posts = new posts_model({
-            title: post['title'],
-            body: post['body'],
-            excerption: post['excerption'],
-            category: post['category'],
-            image:'images/'+nametoSave
-        });
+
+        if (images) {
+            var posts = new model.posts({
+                title: post['title'],
+                body: post['body'],
+                excerption: post['excerption'],
+                category: post['category'],
+                image: images._id
+            })
+        } else {
+            var posts = new model.posts({
+                title: post['title'],
+                body: post['body'],
+                excerption: post['excerption'],
+                category: post['category']
+            })
+        }
         posts.save(function () {
-            res.send({id: posts['_id']});
-        });
+
+            res.send({id: posts['_id']})
+        })
+
+
     });
 
     req.pipe(busboy);
@@ -115,7 +133,7 @@ router.put('/:postId', function (req, res, next) {
     var postId = req.params.postId;
 
 
-    posts_model.update({_id: postId}, post, function (err, result) {
+    model.posts.update({_id: postId}, post, function (err, result) {
         if (err) return handleError(err);
         res.send(result);
     })
@@ -125,7 +143,7 @@ router.put('/:postId', function (req, res, next) {
 router.delete('/:postId', function (req, res, next) {
     var postId = req.params.postId;
 
-    posts_model.remove({_id: postId}, function (err, result) {
+    model.posts.remove({_id: postId}, function (err, result) {
         res.send(result);
     })
 });

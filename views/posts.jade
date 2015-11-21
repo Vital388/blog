@@ -14,7 +14,7 @@ block content
                 div.date
                     h4=post.date
                 div.image
-                    image(src=post.image)
+                    image(src=post.image?post.image.path:'')
                 div.short
                     p=post ? post.excerption : ''
                 div.links

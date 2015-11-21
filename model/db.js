@@ -2,7 +2,7 @@
  * Created by Lollypop on 02.11.2015.
  */
 var mongoose = require('mongoose');
-const DATABASE = 'mongodb://Vital388:Lollypop388@ds047524.mongolab.com:47524/blog';
+const DATABASE = 'localhost:27017/blog';
 //var data=require('./bd.json'); //read users from file.json
 mongoose.connect(DATABASE, function (error) {
     if (error) {
@@ -10,14 +10,13 @@ mongoose.connect(DATABASE, function (error) {
     }
 });
 var Schema = mongoose.Schema;
-
 var blogSchema = new Schema({
     title: String,
     author: String,
     body: String,
     excerption: String,
-    image:String,
-    category:String,
+    category: String,
+    image:{ type:Schema.ObjectId, ref:'images'},
     comments: [{body: String, date: Date}],
     date: {type: Date, default: Date.now},
     hidden: Boolean,
@@ -26,5 +25,13 @@ var blogSchema = new Schema({
         favs: Number
     }
 });
+var imageSchema = new Schema({
+    name: String,
+    size: String,
+    date: {type: Date, default: Date.now},
+    path: String
+});
 var posts = mongoose.model('posts', blogSchema);
-module.exports = posts;
+var images = mongoose.model('images', imageSchema);
+module.exports.posts = posts;
+module.exports.images = images;
