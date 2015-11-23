@@ -32,7 +32,19 @@ var imageSchema = new Schema({
     date: {type: Date, default: Date.now},
     path: String
 });
+var usersSchema = new Schema({
+    login: String,
+    password: String,
+    nickname: String,
+    email: String,
+    date_of_birth: String,
+    sex: String,
+    date: {type: Date, default: Date.now},
+    avatar: String
+});
 var posts = mongoose.model('posts', blogSchema);
 var images = mongoose.model('images', imageSchema);
+var users =mongoose.model('users', usersSchema);
 module.exports.posts = posts;
 module.exports.images = images;
+module.exports.users = users;

@@ -130,3 +130,7 @@ body {
     display: none;
     border: #CC9999 solid;
 }
+img{
+    width: 300px ;
+    height: 200px;
+}

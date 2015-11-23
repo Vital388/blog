@@ -10,22 +10,22 @@ block content
             form(enctype='multipart/form-data')
                 div.category
                     h4 Enter category name
-                    input.newcategory(type='text' name ='category' value=post ? post[0].category : '')
+                    input.newcategory(type='text' name ='category' value=post ? post.category : '')
                 div.posttitle
                     h4 Enter Title
-                    input.newposttitle(type='text' name='title' value=post ? post[0].title : '')
+                    input.newposttitle(type='text' name='title' value=post ? post.title : '')
                 div.body
                     h4 Input main text
-                    textarea.newpostbody(name='body')=post ? post[0].body : ''
+                    textarea.newpostbody(name='body')=post ? post.body : ''
                 div.short
                     h4 Input short text
-                    textarea.excerption(name='excerption')=post ? post[0].excerption : ''
+                    textarea.excerption(name='excerption')=post ? post.excerption : ''
                 div.image
                     h4 Add image to post
                         input.newimage(type='file' name='image'  accept='image/*')
             div.links
                 a(href='/posts') All posts
-                label.addpost(id=post ? post[0].id : '') Add post
-                label.update(id=post ? post[0].id : '') Update post
-                label.delete(id=post ? post[0].id : '') Delete post
+                label.addpost(id=post ? post.id : '') Add post
+                label.update(id=post ? post.id : '') Update post
+                label.delete(id=post ? post.id : '') Delete post
             div.alert

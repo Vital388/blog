@@ -1,43 +1,21 @@
 var express = require('express');
 var router = express.Router();
 var model = require('../model/db');
-var Busboy = require('busboy');
-var crypto = require('crypto');
 var fs = require('fs');
 var multiparty = require('multiparty');
-var path = require('path');
+var randoName=require('../random')
 /* GET users listing. */
-var b64Safe = {'/': '_', '+': '-'};
-var FILE_EXT_RE = /(\.[_\-a-zA-Z0-9]{0,16}).*/;
-function randoName(filename) {
-    var ext = path.extname(filename).replace(FILE_EXT_RE, '$1');
-    var name = randoString(18) + ext;
-    return name;
-}
-
-function randoString(size) {
-    return rando(size).toString('base64').replace(/[\/\+]/g, function (x) {
-        return b64Safe[x];
-    });
-}
-
-function rando(size) {
-    try {
-        return crypto.randomBytes(size);
-    } catch (err) {
-        return crypto.pseudoRandomBytes(size);
-    }
-}
 
 
 router.get('/', function (req, res, next) {
 
-    var pages_count;
+    var pages_count=0;
     var pageNumber = req.query.page || 1;
     var resultsPerPage = req.query.resultsPerPage || 5;
     var skipFrom = (pageNumber * resultsPerPage) - resultsPerPage;
     model.posts.count({}, function (err, c) {
         if (c % resultsPerPage) {
+
             pages_count = c / resultsPerPage + 1;
 
         } else {
@@ -45,9 +23,9 @@ router.get('/', function (req, res, next) {
 
         }
 
-        model.posts.find().skip(skipFrom).limit(resultsPerPage).populate('image').sort('-date').exec(function (err, posts) {
+        model.posts.find().skip(skipFrom).limit(resultsPerPage).populate('image').sort('-date').exec(function (err, data) {
 
-            res.render('posts', {posts: posts, pages_count: pages_count})
+            res.render('posts', {posts: data, pages_count: pages_count})
         });
 
     })
@@ -58,7 +36,7 @@ router.get('/category', function (req, res, next) {
 
 });
 router.get('/category/:catname', function (req, res, next) {
-    var pages_count;
+    var pages_count=0;
     var catname = req.params.catname;
     var pageNumber = req.query.page || 1;
     var resultsPerPage = req.query.resultsPerPage || 2;
@@ -73,20 +51,20 @@ router.get('/category/:catname', function (req, res, next) {
 
         }
 
-        model.posts.find({category: catname}).skip(skipFrom).limit(resultsPerPage).sort('-date').exec(function (err, posts) {
-            res.render('category', {posts: posts, pages_count: pages_count});
+        model.posts.find({category: catname}).skip(skipFrom).limit(resultsPerPage).populate('image').sort('-date').exec(function (err, data) {
+            res.render('category', {posts: data, pages_count: pages_count});
         })
     });
 });
 router.get('/create', function (req, res, next) {
     var postId = req.query.id;
+    model.posts.findOne({_id: postId},function (err, data) {
+            if (!err) {
+                res.render('new_post', {post: data});
+            } else {
+                res.render('new_post');
+            }
 
-    model.posts.find({_id: postId}, function (err, post) {
-        if (post.length > 0) {
-            res.render('new_post', {post: post});
-        } else {
-            res.render('new_post');
-        }
     })
 
 });
@@ -94,15 +72,19 @@ router.get('/:postId', function (req, res, next) {
 
     var postId = req.params.postId;
 
-    model.posts.find({_id: postId}, function (err, post) {
-        if (post) {
-            res.render('post', {post: post});
+
+    model.posts.findOne({_id: postId}).populate('image').exec(function (err, data) {
+        if (data) {
+
+            res.render('post', {post: data});
         } else {
+
             res.sendStatus(404);
         }
     });
 
-});
+})
+;
 
 router.post('/', function (req, res, next) {
 
@@ -246,9 +228,11 @@ router.delete('/:postId', function (req, res, next) {
         res.send(result);
     });
     model.images.findOne({_post: postId}, function (err, data) {
+        if(data){
         model.images.remove({_post: postId}, function (err, result) {
             fs.unlinkSync('public/' + data.path);
         });
+        }
     });
 
 });

@@ -8,13 +8,15 @@ block content
     div.mainblock
         div.post
             div.posttitle
-                h1=post[0].title
+                h1=post.title
             div.date
-                h4=post[0].date
+                h4=post.date
+                div.image
+                    image(src=post.image ? post.image.path : '')
             div.body
-                p=post[0].body
+                p=post.body
             div.links
                 a(href='/posts') All posts
-                a(href='/posts/create?id=' + post[0].id) Updete post
-                label.delete(id=post[0].id) Delete post
+                a(href='/posts/create?id=' + post.id) Updete post
+                label.delete(id=postid) Delete post
             div.alert
