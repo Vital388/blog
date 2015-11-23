@@ -3,26 +3,26 @@
 
 extends layout
 block content
-   script(src='/javascripts/jquery-1.11.3.js')
-   script(src='/javascripts/post.js')
-   div.mainblock
-      div.postblock
-         each post in posts
-            div.post(id=post.id)
-               div.category
-                  a(href='/posts/category/' + post.category)=post.category
-               div.posttitle
-                  h1=post.title
-               div.date
-                  h2=post.date
-               div.short
-                  p=post ? post.excerption : ''
-               div.links
-                  a(href='/posts/' + post.id) Read post
-                  a(href='/posts/create?id=' + post.id) Updete post
-                  label.delete(id=post.id) Delete post
-      div.pagination
-         - for (var i = 1; i <= pages_count; i++)
-            a(href='/posts/category/'+posts[0].category+'?page='+i)=i
-      div.newpost
-         a(href='/posts/create') New post
+    script(src='/javascripts/jquery-1.11.3.js')
+    script(src='/javascripts/post.js')
+    div.mainblock
+        div.postblock
+            each post in posts
+                div.post(id=post.id)
+                    div.category
+                        a(href='/posts/category/' + post.category)=post.category
+                    div.posttitle
+                        h1=post.title
+                    div.date
+                        h2=post.date
+                    div.short
+                        p=post ? post.excerption : ''
+                    div.links
+                        a(href='/posts/' + post.id) Read post
+                        a(href='/posts/create?id=' + post.id) Updete post
+                        label.delete(id=post.id) Delete post
+        div.pagination
+            - for (var i = 1; i <= pages_count; i++)
+            a(href='/posts/category/' + posts[0].category + '?page=' + i)=i
+        div.newpost
+            a(href='/posts/create') New post

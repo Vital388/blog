@@ -13,7 +13,7 @@ block content
                     input.newcategory(type='text' name ='category' value=post ? post[0].category : '')
                 div.posttitle
                     h4 Enter Title
-                    input.newposttitle(type='text' name='title' value=post? post[0].title : '')
+                    input.newposttitle(type='text' name='title' value=post ? post[0].title : '')
                 div.body
                     h4 Input main text
                     textarea.newpostbody(name='body')=post ? post[0].body : ''
@@ -25,7 +25,7 @@ block content
                         input.newimage(type='file' name='image'  accept='image/*')
             div.links
                 a(href='/posts') All posts
-                label.addpost(id=post?post[0].id:'') Add post
-                label.update(id=post?post[0].id:'') Update post
-                label.delete(id=post?post[0].id:'') Delete post
+                label.addpost(id=post ? post[0].id : '') Add post
+                label.update(id=post ? post[0].id : '') Update post
+                label.delete(id=post ? post[0].id : '') Delete post
             div.alert

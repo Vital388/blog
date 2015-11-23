@@ -48,9 +48,9 @@ $(document).ready(function (event) {
         var postbody = $('.newpostbody').val();
         var excerption = $('.excerption').val();
         var category = $('.newcategory').val();
-        var image=$('.newimage').val();
-        var form=new FormData($('form')[0]);
-        console.log(form);
+        var image = $('.newimage').val();
+        var form = new FormData($('form')[0]);
+
         if (posttitle && postbody && excerption && category) {
             $.ajax({
                 type: 'POST',
@@ -84,20 +84,17 @@ $(document).ready(function (event) {
             var postbody = $('.newpostbody').val();
             var excerption = $('.excerption').val();
             var category = $('.newcategory').val();
-            var image=$('.newimage').val();
+            var image = $('.newimage').val();
+            var form = new FormData($('form')[0]);
             if (posttitle && postbody && excerption && category) {
                 $.ajax({
                     type: 'PUT',
                     url: '/posts/' + postId,
-                    data: {
-                        title: posttitle,
-                        body: postbody,
-                        excerption: excerption,
-                        category: category,
-                        image:image
-                    },
+                    processData: false,
+                    contentType: false,
+                    data: form,
                     success: function (result) {
-                        if (result.nModified) {
+                        if (result.ok) {
                             $('.alert').show("fast", function () {
                                 // use callee so don't have to name the function
                                 $('.alert').html('<p>Post updated');

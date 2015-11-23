@@ -6,13 +6,12 @@ body {
 .mainblock {
     position: absolute;
     display: inline-block;
-    width:650px;
-    left:25%;
-    right:25%;
+    width: 650px;
+    left: 25%;
+    right: 25%;
     background: #FFFAF0;
     border: #99CCCC solid;
 }
-
 
 .newpost {
     position: fixed;
@@ -100,7 +99,7 @@ body {
 }
 
 .body {
-    background:#FFFAF0;
+    background: #FFFAF0;
     color: #696969;
 }
 
@@ -114,10 +113,12 @@ body {
     padding-bottom: 5px;
 
 }
-.short{
-    background:#FFFAF0;
+
+.short {
+    background: #FFFAF0;
     color: #696969;
 }
+
 .alert {
     position: fixed;
     top: 10px;
@@ -126,6 +127,6 @@ body {
     padding: 7px;
     background: #FFE4E1;
     border-radius: 7px;
-    display:none;
+    display: none;
     border: #CC9999 solid;
 }

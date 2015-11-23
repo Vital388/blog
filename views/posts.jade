@@ -14,7 +14,7 @@ block content
                 div.date
                     h4=post.date
                 div.image
-                    image(src=post.image?post.image.path:'')
+                    image(src=post.image ? post.image.path : '')
                 div.short
                     p=post ? post.excerption : ''
                 div.links
@@ -23,6 +23,6 @@ block content
                     label.delete(id=post.id) Delete post
         div.pagination
             - for (var i = 1; i <= pages_count; i++)
-                a(href='/posts/?page='+i)=i
+            a(href='/posts/?page=' + i)=i
         div.newpost
             a(href='/posts/create') New post

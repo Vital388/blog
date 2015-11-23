@@ -16,7 +16,7 @@ var blogSchema = new Schema({
     body: String,
     excerption: String,
     category: String,
-    image:{ type:Schema.ObjectId, ref:'images'},
+    image: {type: Schema.ObjectId, ref: 'images'},
     comments: [{body: String, date: Date}],
     date: {type: Date, default: Date.now},
     hidden: Boolean,
@@ -26,6 +26,7 @@ var blogSchema = new Schema({
     }
 });
 var imageSchema = new Schema({
+    _post: {type: Schema.Types.ObjectId, ref: 'posts'},
     name: String,
     size: String,
     date: {type: Date, default: Date.now},
