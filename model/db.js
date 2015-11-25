@@ -33,7 +33,7 @@ var imageSchema = new Schema({
     path: String
 });
 var usersSchema = new Schema({
-    login: String,
+    login: {type: String, unique: true } ,
     password: String,
     nickname: String,
     email: String,

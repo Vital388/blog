@@ -24,4 +24,10 @@ function rando(size) {
         return crypto.pseudoRandomBytes(size);
     }
 }
-module.exports=randoName;
+function hashPassword(pass){
+    var shasum = crypto.createHash('sha256');
+    shasum.update(pass);
+    return shasum.digest('hex');
+}
+module.exports.randoName=randoName;
+module.exports.hashPassword=hashPassword;

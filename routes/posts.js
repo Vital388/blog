@@ -3,7 +3,7 @@ var router = express.Router();
 var model = require('../model/db');
 var fs = require('fs');
 var multiparty = require('multiparty');
-var randoName=require('../random')
+var Crypto=require('../random');
 /* GET users listing. */
 
 
@@ -131,7 +131,7 @@ router.post('/', function (req, res, next) {
     });
     form.on('part', function (part) {
         if (part.filename && part.byteCount <= maxSize) {
-            var name = randoName(part.filename);
+            var name = Crypto.randoName(part.filename);
             part.pipe(fs.createWriteStream('public/images/' + name));
 
             images = new model.images({
@@ -198,7 +198,7 @@ router.put('/:postId', function (req, res, next) {
                     data.save();
                     part.pipe(fs.createWriteStream('public/' + data.path));
                 } else {
-                    var name = randoName(part.filename);
+                    var name = Crypto.randoName(part.filename);
                     part.pipe(fs.createWriteStream('public/images/' + name));
 
                     images = new model.images({
