@@ -1,0 +1,13 @@
+//
+   Created by Lollypop on 06.12.2015.
+h2 Edit post
+form(ng-submit='submitPost()' )
+   label(for='title') Title:
+   input( type='text' ng-model='form.title' name='title')
+   p Body:
+   textarea( ng-model='form.body' name='body' cols='50', rows='15')
+   p Img:
+      input(type='file' file-model="myFile" name='image'  accept='image/*')
+   p
+      input(type='submit' value="Submit Post")
+
