@@ -2,23 +2,17 @@ var express = require('express');
 var router = express.Router();
 var model = require('../../model/db');
 var multiparty = require('multiparty');
-var Crypto=require('../../random')
-/* GET users listing. */
-router.get('/', function (req, res, next) {
-    res.send('respond with a resource');
-});
-router.get('/registration', function (req, res, next) {
-    res.send('respond with a resource');
-});
-router.get('/login', function (req, res, next) {
-    res.send('respond with a resource');
-});
-router.post('/registration', function (req, res, next) {
+var Crypto=require('../../lib/random');
+var passport = require('passport')
+
+
+
+
+router.post('/signOn', function (req, res, next) {
     var form = new multiparty.Form({autoFields: false, autoFiles: false});
     var user = [];
     form.on('close', function () {
         var heshPass=Crypto.hashPassword(user['password']);
-        console.log(heshPass);
         user = new model.users({
             login: user['login'],
             password: heshPass,
@@ -52,22 +46,28 @@ router.post('/registration', function (req, res, next) {
 
 
 });
-router.post('/login', function (req, res, next) {
+router.post('/signIn',
+    passport.authenticate('local'),
+    function(req, res) {
+        res.cookie('user', JSON.stringify({nickname:req.user.nickname}))
+        res.send(200);
+    });
+
+/*
     var form = new multiparty.Form({autoFields: false, autoFiles: false});
     var user = [];
     form.on('close', function () {
         var heshPass=Crypto.hashPassword(user['password']);
-        console.log(heshPass);
         model.users.findOne({
             login: user['login'],
             password: heshPass
         }).exec(function (err, data) {
-            if (data) {
 
+            if (data) {
                 res.send( data);
             } else {
 
-                res.sendStatus(404);
+                res.json(err);
             }
         });
     });
@@ -85,6 +85,16 @@ router.post('/login', function (req, res, next) {
 
     form.parse(req);
 
+*/
+router.get('/logout',
+    function(req, res) {
+        if(req.user) {
+            req.logout();
+            res.json({status:'ok'})
+        } else {
+            res.json({status: "Not logged in"});
+        }
+    });
 
-});
+
 module.exports = router;

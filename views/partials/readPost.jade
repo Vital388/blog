@@ -1,15 +1,13 @@
-//
-   Created by Lollypop on 04.11.2015.
-div.category
-    a(href='/posts/category/{{post.category}}') {{post.category}}
-div.posttitle
-     h1 {{post.title}}
-div.date
-     h2 {{post.date}}
-div.image
-     image(ng-src='{{post.image.path}}')
-div.body
-     p {{post.body}}
-div.links
-     a(href='api/posts/create?id={{post._id}}') Updete post
-     label.delete(id='{{post._id}}') Delete post
+.blog-post
+    h2.blog-post-title {{post.title}}
+    p.blog-post-meta {{post.date}}
+    p
+        h3 {{post.category}}
+    image.img-responsive(ng-src='{{post.image.path}}')
+    p.lead {{post.body}}
+nav
+    ul.pager
+        li
+            a(href='/editPost/{{post._id}}') Edit post
+        li
+            a(href='/deletePost/{{post._id}}') Delete post

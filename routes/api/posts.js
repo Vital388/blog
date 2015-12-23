@@ -3,9 +3,9 @@ var router = express.Router();
 var model = require('../../model/db');
 var fs = require('fs');
 var multiparty = require('multiparty');
-var Crypto=require('../../random');
+var Crypto=require('../../lib/random');
+var ensureAuthenticated=require('../../lib/auth');
 /* GET users listing. */
-
 
 router.get('/', function (req, res, next) {
 
@@ -24,15 +24,18 @@ router.get('/', function (req, res, next) {
         }
 
         model.posts.find().skip(skipFrom).limit(resultsPerPage).populate('image').sort('-date').exec(function (err, data) {
-
             res.json({posts: data, pages_count: pages_count})
         });
 
     })
 
 });
-router.get('/category', function (req, res, next) {
-    res.redirect('/posts');
+router.get('/categories', function (req, res, next) {
+
+    model.categories.find().exec(function (err, data) {
+        res.json(data);
+    })
+
 
 });
 router.get('/category/:catname', function (req, res, next) {
@@ -86,16 +89,22 @@ router.get('/:postId', function (req, res, next) {
 })
 ;
 
-router.post('/', function (req, res, next) {
+router.post('/',ensureAuthenticated,function (req, res, next) {
 
     var form = new multiparty.Form({autoFields: false, autoFiles: false});
     var post = [];
     var images;
     var posts;
-    var maxSize = 2000000;
+    var maxSize = 5000000;
+    var categories;
     form.on('close', function () {
+        categories = new model.categories({
+            name:post['category']
+        });
+        categories.save();
         if (images) {
             posts = new model.posts({
+                author:req.user.nickname,
                 title: post['title'],
                 body: post['body'],
                 excerption: post['excerption'],
@@ -107,10 +116,11 @@ router.post('/', function (req, res, next) {
                 images._post = posts._id;
                 images.save();
 
-                res.send({id: posts['_id']})
+                res.json({access:true})
             })
         } else {
             posts = new model.posts({
+                author:req.user.nickname,
                 title: post['title'],
                 body: post['body'],
                 excerption: post['excerption'],
@@ -118,7 +128,7 @@ router.post('/', function (req, res, next) {
             });
             posts.save(function () {
 
-                res.send({id: posts['_id']})
+                res.json({access:true})
             })
         }
 
@@ -150,12 +160,12 @@ router.post('/', function (req, res, next) {
 
 });
 
-router.put('/:postId', function (req, res, next) {
+router.put('/:postId', ensureAuthenticated,function (req, res, next) {
     var postId = req.params.postId;
 
     var form = new multiparty.Form({autoFields: false, autoFiles: false});
     var post = [];
-    var maxSize = 2000000;
+    var maxSize = 5000000;
     var images;
     form.on('close', function () {
         if (images) {
@@ -166,10 +176,13 @@ router.put('/:postId', function (req, res, next) {
                 category: post['category'],
                 image: images._id
             }, function (err, result) {
-                if (err) return handleError(err);
-                res.json(result);
-            })
+                if (err) {
+                    return handleError(err);
+                } else {
 
+                    res.json({access: true})
+                }
+            })
         } else {
 
             model.posts.update({_id: postId}, {
@@ -178,8 +191,12 @@ router.put('/:postId', function (req, res, next) {
                 excerption: post['excerption'],
                 category: post['category']
             }, function (err, result) {
-                if (err) return handleError(err);
-                res.json(result);
+                if (err) {
+                    return handleError(err);
+                }else{
+
+                res.json({access:true})
+                }
             })
         }
 
@@ -221,10 +238,15 @@ router.put('/:postId', function (req, res, next) {
 });
 
 
-router.delete('/:postId', function (req, res, next) {
+router.delete('/:postId', ensureAuthenticated,function (req, res, next) {
     var postId = req.params.postId;
     model.posts.remove({_id: postId}, function (err, result) {
-        res.json(result);
+        if (err) {
+            return handleError(err);
+        }else{
+
+            res.json({access:true})
+        }
     });
     model.images.findOne({_post: postId}, function (err, data) {
         if(data){

@@ -25,6 +25,10 @@ var blogSchema = new Schema({
         favs: Number
     }
 });
+var categoriesSchema= new Schema({
+    name:{type: String , ref: 'posts'}
+
+});
 var imageSchema = new Schema({
     _post: {type: Schema.Types.ObjectId, ref: 'posts'},
     name: String,
@@ -45,6 +49,8 @@ var usersSchema = new Schema({
 var posts = mongoose.model('posts', blogSchema);
 var images = mongoose.model('images', imageSchema);
 var users =mongoose.model('users', usersSchema);
+var categories =mongoose.model('categories', categoriesSchema);
 module.exports.posts = posts;
 module.exports.images = images;
 module.exports.users = users;
+module.exports.categories = categories;

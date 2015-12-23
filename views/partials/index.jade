@@ -1,18 +1,36 @@
 //
    Created by Lollypop on 04.11.2015.
+.row
+    .col-sm-8.blog-main
+        .div(ng-repeat='post in posts')
+            .blog-post
+                h2.blog-post-title {{post.title}}
+                p
+                    h3 {{post.category}}
+                p.blog-post-meta {{post.date | date:'medium'}}
+                image.img-responsive.img-rounded(ng-src='{{post.image.path}}')
+                p.lead {{post.excerption}}
+                    nav
+                ul.pager
+                    li
+                        a(href='/readPost/{{post._id}}') Read post
+                    li
+                        a(href='/editPost/{{post._id}}') Edit post
+                    li
+                        a(href='/deletePost/{{post._id}}') Delete post
+    .col-sm-3.col-sm-offset-1.blog-sidebar
+        .sidebar-module
+            h4 Categories
+            ol.list-unstyled
+                li
+                    a(href='#') First category
+                li
+                    a(href='#') Second category
+                li
+                    a(href='#') Three category
 
-div(ng-repeat='post in posts')
-    div.category
-        a(href='/posts/category/{{post.category}}') {{post.category}}
-    div.posttitle
-        h1 {{post.title}}
-    div.date
-        h2 {{post.date}}
-    div.image
-        image(ng-src='{{post.image.path}}')
-    div.short
-        p {{post.excerption}}
-    div.links
-        a(href='/readPost/{{post._id}}') Read post
-        a(href='/editPost/{{post._id}}') Edit post
-        a(href='/deletePost/{{post._id}}') Delete post
+
+
+
+
+

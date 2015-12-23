@@ -1,0 +1,19 @@
+<div class="blog-masthead">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <nav class="blog-nav">
+                    <a href="/" class="blog-nav-item active">Home</a>
+                    <a href="#" class="blog-nav-item">About</a>
+                    <a href="/signOn" class="blog-nav-item">Sign ON</a>
+                    <a href="/signIn" class="blog-nav-item">Sign IN</a>
+                    <a href="/addPost" class="blog-nav-item">Add a new post</a>
+                </nav>
+            </div>
+            <div class="col-md-4 inf-panel" ng-controller="LogOutCtrl" ng-show="currentUser.nickname">
+                <h4  class="inf-panel">Hello , <em style="color:#98FB98">{{currentUser.nickname}}</em></h4>
+                <h4  class="inf-panel" ng-click="logout()">Log Out</h4>
+            </div>
+        </div>
+    </div>
+</div>
