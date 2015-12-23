@@ -1,0 +1,12 @@
+//
+   Created by Lollypop on 10.12.2015.
+h2 Sign In
+form.form-horizontal(ng-submit='signIn()' role='form')
+   .form-group
+      label(for='exampleInputEmail1') Login
+      input.form-control( type='text' ng-model='form.login' name='login')
+   .form-group
+      label(for='exampleInputPassword1') Password
+      input.form-control(type='password' ng-model='form.password' name='password')
+   .form-group
+      input(type='submit' value="Enter")

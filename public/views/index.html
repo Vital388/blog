@@ -1,0 +1,31 @@
+<div class="row">
+    <div class="col-sm-8 blog-main">
+        <div ng-repeat="post in posts" class="div">
+            <div class="blog-post">
+                <h2 class="blog-post-title">{{post.title}}</h2>
+                <p>
+                <h3>{{post.category}}</h3>
+                </p>
+                <p class="blog-post-meta">{{post.date | date:'medium'}} Author {{post.author}}</p>
+                <image ng-src="{{post.image.path}}" class="img-responsive img-rounded"></image>
+                <p class="lead">{{post.excerption}}
+                    <nav></nav>
+                </p>
+                <ul class="pager">
+                    <li><a href="/readPost/{{post._id}}">Read post</a></li>
+                    <li><a href="/editPost/{{post._id}}">Edit post</a></li>
+                    <li><a href="/deletePost/{{post._id}}">Delete post</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module" ng-controller="categoriesCtrl">
+            <h4>Categories</h4>
+            <ol class="list-unstyled"  ng-repeat="category in categories" >
+                <li><a href="#">{{category.name}}</a></li>
+
+            </ol>
+        </div>
+    </div>
+</div>
