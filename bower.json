@@ -1,0 +1,23 @@
+{
+  "name": "blog",
+  "description": "",
+  "main": "bin/www",
+  "authors": [
+    "Fityo Vitaliy"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/Vital388/blog",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-cookies": "~1.4.8",
+    "angular-sanitize": "~1.4.8",
+    "angular-route": "~1.4.8"
+  }
+}

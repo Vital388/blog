@@ -1,7 +1,7 @@
 /**
  * Created by Lollypop on 02.12.2015.
  */
-angular.module('blog', ['ngRoute', 'blog.directives','ngCookies']).
+angular.module('blog', ['ngRoute', 'blog.directives','ngCookies', 'ngSanitize']).
     config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
         $routeProvider.
             when('/', {

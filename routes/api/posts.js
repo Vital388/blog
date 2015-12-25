@@ -3,13 +3,16 @@ var router = express.Router();
 var model = require('../../model/db');
 var fs = require('fs');
 var multiparty = require('multiparty');
-var Crypto=require('../../lib/random');
-var ensureAuthenticated=require('../../lib/auth');
+var Crypto = require('../../lib/random');
+var ensureAuthenticated = require('../../lib/auth');
+var s3obj = require('../../lib/amazonS3');
+
+
 /* GET users listing. */
 
 router.get('/', function (req, res, next) {
 
-    var pages_count=0;
+    var pages_count = 0;
     var pageNumber = req.query.page || 1;
     var resultsPerPage = req.query.resultsPerPage || 5;
     var skipFrom = (pageNumber * resultsPerPage) - resultsPerPage;
@@ -39,7 +42,7 @@ router.get('/categories', function (req, res, next) {
 
 });
 router.get('/category/:catname', function (req, res, next) {
-    var pages_count=0;
+    var pages_count = 0;
     var catname = req.params.catname;
     var pageNumber = req.query.page || 1;
     var resultsPerPage = req.query.resultsPerPage || 2;
@@ -61,12 +64,12 @@ router.get('/category/:catname', function (req, res, next) {
 });
 router.get('/create', function (req, res, next) {
     var postId = req.query.id;
-    model.posts.findOne({_id: postId},function (err, data) {
-            if (!err) {
-                res.render('new_post', {post: data});
-            } else {
-                res.render('new_post');
-            }
+    model.posts.findOne({_id: postId}, function (err, data) {
+        if (!err) {
+            res.render('new_post', {post: data});
+        } else {
+            res.render('new_post');
+        }
 
     })
 
@@ -76,10 +79,10 @@ router.get('/:postId', function (req, res, next) {
     var postId = req.params.postId;
 
 
-    model.posts.findOne({_id: postId}).populate('image').exec(function (err, data) {
-        if (data) {
+    model.posts.findOne({_id: postId}).populate('image').exec(function (err, post) {
+        if (post) {
 
-            res.json({post: data});
+            res.json(post);
         } else {
 
             res.sendStatus(404);
@@ -89,48 +92,33 @@ router.get('/:postId', function (req, res, next) {
 })
 ;
 
-router.post('/',ensureAuthenticated,function (req, res, next) {
+router.post('/', ensureAuthenticated, function (req, res, next) {
 
     var form = new multiparty.Form({autoFields: false, autoFiles: false});
     var post = [];
-    var images;
     var posts;
-    var maxSize = 5000000;
     var categories;
     form.on('close', function () {
+        console.log(post['title'])
         categories = new model.categories({
-            name:post['category']
+            name: post['category']
         });
         categories.save();
-        if (images) {
-            posts = new model.posts({
-                author:req.user.nickname,
-                title: post['title'],
-                body: post['body'],
-                excerption: post['excerption'],
-                category: post['category'],
-                image: images._id
-            });
-            posts.save(function () {
+        posts = new model.posts({
+            author: req.user.nickname,
+            title: post['title'],
+            body: post['body'],
+            excerption: post['excerption'],
+            category: post['category']
+        });
+        posts.save(function () {
 
-                images._post = posts._id;
-                images.save();
-
-                res.json({access:true})
+            res.json({
+                access: true,
+                postID:posts._id
             })
-        } else {
-            posts = new model.posts({
-                author:req.user.nickname,
-                title: post['title'],
-                body: post['body'],
-                excerption: post['excerption'],
-                category: post['category']
-            });
-            posts.save(function () {
+        })
 
-                res.json({access:true})
-            })
-        }
 
     });
     form.on('error', function (err) {
@@ -139,66 +127,35 @@ router.post('/',ensureAuthenticated,function (req, res, next) {
     form.on('field', function (name, value) {
         post[name] = value;
     });
-    form.on('part', function (part) {
-        if (part.filename && part.byteCount <= maxSize) {
-            var name = Crypto.randoName(part.filename);
-            part.pipe(fs.createWriteStream('public/images/' + name));
 
-            images = new model.images({
-                name: part.filename,
-                path: '/images/' + name,
-                size: part.byteCount
-            });
-
-        } else {
-            part.resume();
-        }
-    });
 
     form.parse(req);
 
 
-});
+})
+;
 
-router.put('/:postId', ensureAuthenticated,function (req, res, next) {
+router.put('/:postId', ensureAuthenticated, function (req, res, next) {
     var postId = req.params.postId;
 
     var form = new multiparty.Form({autoFields: false, autoFiles: false});
     var post = [];
-    var maxSize = 5000000;
-    var images;
+
     form.on('close', function () {
-        if (images) {
-            model.posts.update({_id: postId}, {
-                title: post['title'],
-                body: post['body'],
-                excerption: post['excerption'],
-                category: post['category'],
-                image: images._id
-            }, function (err, result) {
-                if (err) {
-                    return handleError(err);
-                } else {
+        model.posts.update({_id: postId}, {
+            title: post['title'],
+            body: post['body'],
+            excerption: post['excerption'],
+            category: post['category']
+        }, function (err, result) {
+            if (err) {
+                return handleError(err);
+            } else {
 
-                    res.json({access: true})
-                }
-            })
-        } else {
+                res.json({access: true})
+            }
+        })
 
-            model.posts.update({_id: postId}, {
-                title: post['title'],
-                body: post['body'],
-                excerption: post['excerption'],
-                category: post['category']
-            }, function (err, result) {
-                if (err) {
-                    return handleError(err);
-                }else{
-
-                res.json({access:true})
-                }
-            })
-        }
 
     });
     form.on('error', function (err) {
@@ -207,59 +164,113 @@ router.put('/:postId', ensureAuthenticated,function (req, res, next) {
     form.on('field', function (name, value) {
         post[name] = value;
     });
-    form.on('part', function (part) {
-        if (part.filename && part.byteCount <= maxSize) {
-            model.images.findOne({_post: postId}, function (err, data) {
-                if (data) {
-                    data.size = part.byteCount;
-                    data.save();
-                    part.pipe(fs.createWriteStream('public/' + data.path));
-                } else {
-                    var name = Crypto.randoName(part.filename);
-                    part.pipe(fs.createWriteStream('public/images/' + name));
 
-                    images = new model.images({
-                        _post: postId,
-                        name: name,
-                        path: '/images/' + name,
-                        size: part.byteCount
-                    });
-                    images.save();
-
-                }
-            })
-        } else {
-            part.resume();
-        }
-    });
 
     form.parse(req);
 
 });
 
 
-router.delete('/:postId', ensureAuthenticated,function (req, res, next) {
+router.delete('/:postId', ensureAuthenticated, function (req, res, next) {
     var postId = req.params.postId;
     model.posts.remove({_id: postId}, function (err, result) {
         if (err) {
             return handleError(err);
-        }else{
+        } else {
 
-            res.json({access:true})
-        }
-    });
-    model.images.findOne({_post: postId}, function (err, data) {
-        if(data){
-        model.images.remove({_post: postId}, function (err, result) {
-            fs.exists('public/' + data.path, function (exists) {
-                if(exists){
-                    fs.unlinkSync('public/' + data.path);
-                }
-            });
-
-        });
+            res.json({access: true})
         }
     });
 
 });
+router.post('/image/:postId', function (req, res, next) {
+    var postId = req.params.postId;
+    var images;
+    var maxSize = 5000000;
+    model.posts.findOne({_id: postId}, function (err, post) {
+        if (!post) {
+            res.json({access: false})
+        } else {
+            model.images.findOne({_post: postId}, function (err, image) {
+                if (image) {
+                    res.json({access: false})
+                } else {
+                    var form = new multiparty.Form({autoFields: false, autoFiles: false});
+
+                    form.on('error', function (err) {
+                        console.log('Error parsing form: ' + err.stack);
+                    });
+
+                    form.on('part', function (part) {
+                        if (part.filename && part.byteCount <= maxSize) {
+                            var name = Crypto.randoName(part.filename);
+                            var params = {Key: 'images/' + name, Body: part, ContentType: part.headers['content-type']};
+                            s3obj.upload(params).
+                                on('httpUploadProgress', function (evt) {
+                                    console.log(evt);
+                                }).
+                                send(function (err, data) {
+                                    if (!err) {
+                                        images = new model.images({
+                                            _post: postId,
+                                            name: name,
+                                            path: data.Location,
+                                            size: part.byteCount
+                                        });
+                                        images.save(function () {
+                                            model.posts.update({_id: postId}, {
+                                                image: images._id
+
+                                            }, function (err, result) {
+                                                console.log(err);
+                                                console.log(result);
+
+                                                res.json({
+                                                    access: true,
+                                                    image: images.path
+                                                })
+
+                                            })
+
+                                        })
+
+
+                                    }
+                                })
+                        }
+                        else {
+                            part.resume();
+                        }
+                    })
+
+                    form.parse(req);
+                }
+
+            })
+        }
+    })
+
+})
+router.delete('/image/:postId', function (req, res, next) {
+    var postId = req.params.postId;
+    model.images.findOneAndRemove({_post: postId}, function (err, image) {
+        if (image) {
+            s3obj.deleteObject({Key: 'images/' + image.name}, function (err, data) {
+                if (err) {
+                    console.log(err, err.stack);
+                } // an error occurred
+                else {
+
+                    console.log(data);
+                    res.json({access: true});
+                }           // successful response
+            })
+        } else {
+            res.json({access: false});
+        }
+
+    })
+
+
+})
 module.exports = router;

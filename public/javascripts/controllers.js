@@ -16,25 +16,24 @@ function ReadPostCtrl($scope, $http, $routeParams) {
         });
 }
 function AddPostCtrl($scope, $http, $location) {
+    $scope.postID={};
     $scope.form = {};
     $scope.submitPost = function () {
         var formData = new FormData();
         formData.append('title', $scope.form.title);
         formData.append('body', $scope.form.body);
-        formData.append('image', $scope.myFile);
         formData.append('category', $scope.form.category);
         formData.append('excerption', $scope.form.excerption);
-        console.log($scope.myFile);
         $http.post('/api/posts', formData, {
             transformRequest: angular.identity,
             headers: {'Content-Type': undefined}
         }).
             success(function (status) {
-                console.log(!status.access)
+
                 if(!status.access){
                     $location.path('/signIn');
                 }else{
-                $location.path('/');
+                    $scope.postID=status.postID
                 }
             });
     }
@@ -42,10 +41,15 @@ function AddPostCtrl($scope, $http, $location) {
 
 }
 function EditPostCtrl($scope, $http, $location, $routeParams) {
+    $scope.postID={};
     $scope.form = {};
     $http.get('/api/posts/' + $routeParams.id).
-        success(function (data) {
-            $scope.form = data.post;
+        success(function (post) {
+            $scope.form = post;
+            $scope.postID=post._id;
+            if(post.image){
+                $scope.srcImage=post.image.path;
+            }
         });
 
 
@@ -57,13 +61,13 @@ function EditPostCtrl($scope, $http, $location, $routeParams) {
         formData.append('category', $scope.form.category);
         formData.append('excerption', $scope.form.excerption);
         formData.append('image', $scope.myFile);
-        console.log($scope.myFile);
+
         $http.put('/api/posts/' + $routeParams.id, formData, {
             transformRequest: angular.identity,
             headers: {'Content-Type': undefined}
         }).
             success(function (status) {
-                console.log(!status.access)
+
                 if(!status.access){
                     $location.path('/signIn');
                 }else{
@@ -79,7 +83,7 @@ function DeletePostCtrl($scope, $http, $location, $routeParams) {
     $scope.deletePost = function () {
         $http.delete('/api/posts/' + $routeParams.id).
             success(function (status) {
-                console.log(!status.access)
+
                 if(!status.access){
                     $location.path('/signIn');
                 }else{
@@ -153,6 +157,40 @@ angular.module('blog')
                 $scope.categories=categories;
             })
 
+
+
+    })
+    .controller('imageCtrl', function ($scope,$route, $location,$rootScope,$cookies,$http) {
+
+        $scope.submitImage = function () {
+            var formData = new FormData();
+            formData.append('image', $scope.myFile);
+            $http.post('/api/posts/image/'+$scope.postID, formData, {
+                transformRequest: angular.identity,
+                headers: {'Content-Type': undefined}
+            }).
+                success(function (status) {
+                    if(!status.access){
+                        //$location.path('/signIn');
+
+                    }else{
+                        $scope.srcImage=status.image;
+                    }
+                });
+        };
+        $scope.deleteImage = function () {
+            $http.delete('/api/posts/image/'+$scope.postID )
+                .success(function (status) {
+
+                    if(!status.access){
+                       // $location.path('/signIn');
+                        //$route.reload();
+                    }else{
+                        $scope.srcImage=null;
+                       // $location.path();
+                    }
+                });
+        }
 
 
     })
