@@ -11,8 +11,8 @@ function IndexCtrl($scope, $http, $rootScope, $cookies) {
 }
 function ReadPostCtrl($scope, $http, $routeParams) {
     $http.get('/api/posts/' + $routeParams.id).
-        success(function (data) {
-            $scope.post = data.post;
+        success(function (post) {
+            $scope.post = post;
         });
 }
 function AddPostCtrl($scope, $http, $location) {
