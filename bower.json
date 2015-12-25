@@ -1,7 +1,7 @@
 {
   "name": "blog",
   "description": "",
-  "main": "bin/www",
+  "main": "app.js",
   "authors": [
     "Fityo Vitaliy"
   ],

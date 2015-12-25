@@ -2,8 +2,7 @@
  * Created by Lollypop on 02.11.2015.
  */
 var mongoose = require('mongoose');
-const DATABASE = 'localhost:27017/blog';
-//var data=require('./bd.json'); //read users from file.json
+const DATABASE = 'mongodb://Vital388:Lollypop388@ds047524.mongolab.com:47524/blog';
 mongoose.connect(DATABASE, function (error) {
     if (error) {
         console.log(error);

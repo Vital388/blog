@@ -33,5 +33,8 @@
     "url": "https://github.com/Vital388/blog/issues"
   },
   "homepage": "https://github.com/Vital388/blog#readme",
-  "description": ""
+  "description": "",
+  "engines": {
+    "node": "4.2.4"
+  }
 }
