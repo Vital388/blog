@@ -2,7 +2,8 @@
  * Created by Lollypop on 02.11.2015.
  */
 var mongoose = require('mongoose');
-const DATABASE = 'mongodb://Vital388:Lollypop388@ds047524.mongolab.com:47524/blog';
+var DATABASE = require('../lib/db_conf.js');
+console.log(DATABASE)
 mongoose.connect(DATABASE, function (error) {
     if (error) {
         console.log(error);
@@ -49,7 +50,7 @@ var posts = mongoose.model('posts', blogSchema);
 var images = mongoose.model('images', imageSchema);
 var users =mongoose.model('users', usersSchema);
 var categories =mongoose.model('categories', categoriesSchema);
-module.exports.posts = posts;
-module.exports.images = images;
-module.exports.users = users;
-module.exports.categories = categories;
+exports.posts = posts;
+exports.images = images;
+exports.users = users;
+exports.categories = categories;
