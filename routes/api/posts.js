@@ -5,43 +5,15 @@ var fs = require('fs');
 var multiparty = require('multiparty');
 var Crypto = require('../../lib/random');
 var ensureAuthenticated = require('../../lib/auth');
+var accessRight = require('../../lib/accessRight');
 var s3obj = require('../../lib/amazonS3');
 
 
 /* GET users listing. */
 
-router.get('/', function (req, res, next) {
 
-    var pages_count = 0;
-    var pageNumber = req.query.page || 1;
-    var resultsPerPage = req.query.resultsPerPage || 5;
-    var skipFrom = (pageNumber * resultsPerPage) - resultsPerPage;
-    model.posts.count({}, function (err, c) {
-        if (c % resultsPerPage) {
-
-            pages_count = c / resultsPerPage + 1;
-
-        } else {
-            pages_count = c / resultsPerPage;
-
-        }
-
-        model.posts.find().skip(skipFrom).limit(resultsPerPage).populate('image').sort('-date').exec(function (err, data) {
-            res.json({posts: data, pages_count: pages_count})
-        });
-
-    })
-
-});
-router.get('/categories', function (req, res, next) {
-
-    model.categories.find().exec(function (err, data) {
-        res.json(data);
-    })
-
-
-});
-router.get('/category/:catname', function (req, res, next) {
+router.get('/categories/:catname', function (req, res, next) {
+    console.log('catname =' + req.params.catname)
     var pages_count = 0;
     var catname = req.params.catname;
     var pageNumber = req.query.page || 1;
@@ -62,16 +34,12 @@ router.get('/category/:catname', function (req, res, next) {
         })
     });
 });
-router.get('/create', function (req, res, next) {
-    var postId = req.query.id;
-    model.posts.findOne({_id: postId}, function (err, data) {
-        if (!err) {
-            res.render('new_post', {post: data});
-        } else {
-            res.render('new_post');
-        }
+router.get('/categories', function (req, res, next) {
 
+    model.categories.find().exec(function (err, data) {
+        res.json(data);
     })
+
 
 });
 router.get('/:postId', function (req, res, next) {
@@ -89,8 +57,54 @@ router.get('/:postId', function (req, res, next) {
         }
     });
 
-})
-;
+});
+router.get('/author/:username', function (req, res, next) {
+
+    var username = req.params.username;
+    var pages_count = 0;
+    var pageNumber = req.query.page || 1;
+    var resultsPerPage = req.query.resultsPerPage || 5;
+    var skipFrom = (pageNumber * resultsPerPage) - resultsPerPage;
+    model.posts.count({}, function (err, c) {
+        if (c % resultsPerPage) {
+
+            pages_count = c / resultsPerPage + 1;
+
+        } else {
+            pages_count = c / resultsPerPage;
+
+        }
+
+        model.posts.find({author: username}).skip(skipFrom).limit(resultsPerPage).populate('image').sort('-date').exec(function (err, data) {
+            res.json({posts: data, pages_count: pages_count})
+        });
+
+    })
+
+});
+router.get('/', function (req, res, next) {
+
+    var pages_count = 0;
+    var pageNumber = req.query.page || 1;
+    var resultsPerPage = req.query.resultsPerPage || 5;
+    var skipFrom = (pageNumber * resultsPerPage) - resultsPerPage;
+    model.posts.count({}, function (err, c) {
+        if (c % resultsPerPage) {
+
+            pages_count = c / resultsPerPage + 1;
+
+        } else {
+            pages_count = c / resultsPerPage;
+
+        }
+
+        model.posts.find().skip(skipFrom).limit(resultsPerPage).populate('image','path').populate('author','nickname').sort('-date').exec(function (err, data) {
+            res.json({posts: data, pages_count: pages_count})
+        });
+
+    })
+
+});
 
 router.post('/', ensureAuthenticated, function (req, res, next) {
 
@@ -105,17 +119,17 @@ router.post('/', ensureAuthenticated, function (req, res, next) {
         });
         categories.save();
         posts = new model.posts({
-            author: req.user.nickname,
+            author: req.user._id,
             title: post['title'],
             body: post['body'],
             excerption: post['excerption'],
             category: post['category']
         });
-        posts.save(function () {
-
+        posts.save(function (err) {
+            if(err) console.log(err);
             res.json({
                 access: true,
-                postID:posts._id
+                postID: posts._id
             })
         })
 
@@ -135,29 +149,29 @@ router.post('/', ensureAuthenticated, function (req, res, next) {
 })
 ;
 
-router.put('/:postId', ensureAuthenticated, function (req, res, next) {
+router.put('/:postId', ensureAuthenticated,accessRight.accessRightPost, function (req, res, next) {
     var postId = req.params.postId;
 
     var form = new multiparty.Form({autoFields: false, autoFiles: false});
     var post = [];
 
     form.on('close', function () {
-        model.posts.update({_id: postId}, {
-            title: post['title'],
-            body: post['body'],
-            excerption: post['excerption'],
-            category: post['category']
-        }, function (err, result) {
-            if (err) {
-                return handleError(err);
-            } else {
 
-                res.json({access: true})
-            }
+                model.posts.update({_id: postId}, {
+                    title: post['title'],
+                    body: post['body'],
+                    excerption: post['excerption'],
+                    category: post['category']
+                }, function (err, result) {
+                    if (err) {
+                        return handleError(err);
+                    } else {
+
+                        res.json({access: true})
+                    }
+                })
+
         })
-
-
-    });
     form.on('error', function (err) {
         console.log('Error parsing form: ' + err.stack);
     });
@@ -168,10 +182,11 @@ router.put('/:postId', ensureAuthenticated, function (req, res, next) {
 
     form.parse(req);
 
-});
+})
+;
 
 
-router.delete('/:postId', ensureAuthenticated, function (req, res, next) {
+router.delete('/:postId', ensureAuthenticated,accessRight.accessRightPost, function (req, res, next) {
     var postId = req.params.postId;
     model.posts.remove({_id: postId}, function (err, result) {
         if (err) {
@@ -183,7 +198,7 @@ router.delete('/:postId', ensureAuthenticated, function (req, res, next) {
     });
 
 });
-router.post('/image/:postId', function (req, res, next) {
+router.post('/image/:postId', ensureAuthenticated,accessRight.accessRightPost, function (req, res, next) {
     var postId = req.params.postId;
     var images;
     var maxSize = 5000000;
@@ -235,6 +250,8 @@ router.post('/image/:postId', function (req, res, next) {
                                         })
 
 
+                                    }else{
+                                        console.log(err)
                                     }
                                 })
                         }
@@ -251,7 +268,7 @@ router.post('/image/:postId', function (req, res, next) {
     })
 
 })
-router.delete('/image/:postId', function (req, res, next) {
+router.delete('/image/:postId', ensureAuthenticated,accessRight.accessRightImage, function (req, res, next) {
     var postId = req.params.postId;
     model.images.findOneAndRemove({_post: postId}, function (err, image) {
         if (image) {

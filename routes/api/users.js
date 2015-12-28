@@ -49,7 +49,7 @@ router.post('/signOn', function (req, res, next) {
 router.post('/signIn',
     passport.authenticate('local'),
     function(req, res) {
-        res.cookie('user', JSON.stringify({nickname:req.user.nickname}))
+        res.cookie('user', JSON.stringify({nickname:req.user.nickname,_id:req.user._id}))
         res.send(200);
     });
 

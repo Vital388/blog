@@ -32,6 +32,14 @@ angular.module('blog', ['ngRoute', 'blog.directives','ngCookies', 'ngSanitize'])
                 templateUrl: '/views/signOn.html',
                 controller: SignOn
             }).
+            when('/categories/:catname', {
+                templateUrl: '/views/category.html',
+                controller: CategoryCtrl
+            }).
+            when('/dashboard/:username', {
+                templateUrl: '/views/dashboard.html',
+                controller: DashboardCtrl
+            }).
             otherwise({
                 redirectTo: '/'
             });

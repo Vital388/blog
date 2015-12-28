@@ -13,16 +13,13 @@
                 </p>
                 <ul class="pager">
                     <li><a href="/readPost/{{post._id}}">Read post</a></li>
+                    <li><a href="/editPost/{{post._id}}">Edit post</a></li>
+                    <li><a href="/deletePost/{{post._id}}">Delete post</a></li>
                 </ul>
             </div>
         </div>
     </div>
     <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
-        <div class="sidebar-module" ng-controller="categoriesCtrl">
-            <h4>Categories</h4>
-            <ol class="list-unstyled"  ng-repeat="category in categories" >
-                <li><a href="/categories/{{category.name}}">{{category.name}}</a></li>
-            </ol>
-        </div>
+        <a href="/addPost/">Add post</a>
     </div>
 </div>

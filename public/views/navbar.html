@@ -7,7 +7,7 @@
                     <a href="#" class="blog-nav-item">About</a>
                     <a href="/signOn" class="blog-nav-item">Sign ON</a>
                     <a href="/signIn" class="blog-nav-item">Sign IN</a>
-                    <a href="/addPost" class="blog-nav-item">Add a new post</a>
+                    <a ng-show="currentUser.nickname" href="/dashboard/{{currentUser.nickname}}" class="blog-nav-item">My articles</a>
                 </nav>
             </div>
             <div class="col-md-4 inf-panel" ng-controller="LogOutCtrl" ng-show="currentUser.nickname">
