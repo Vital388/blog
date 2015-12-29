@@ -144,12 +144,17 @@ function CategoryCtrl($scope, $http,$routeParams, $rootScope, $cookies) {
             $scope.pages_count = data.pages_count;
         });
 }
-function DashboardCtrl($scope, $http,$routeParams, $rootScope, $cookies) {
+function DashboardCtrl($scope, $http,$location,$routeParams, $rootScope, $cookies) {
+    if ($rootScope.currentUser){
     $http.get('/api/posts/author/'+$rootScope.currentUser._id).
         success(function (data, status, headers, config) {
             $scope.posts = data.posts;
             $scope.pages_count = data.pages_count;
         });
+    }else{
+
+        $location.path('/signIn');
+    }
 }
 angular.module('blog')
     .controller('LogOutCtrl', function ($scope, $location,$rootScope,$cookies,$http) {

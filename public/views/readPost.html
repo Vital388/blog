@@ -1,6 +1,6 @@
 <div class="blog-post">
     <h2 class="blog-post-title">{{post.title}}</h2>
-    <p class="blog-post-meta">{{post.date}}</p>
+    <p class="blog-post-meta">{{post.date | date:'medium'}} Author {{post.author.nickname}}</p>
     <p>
     <h3>{{post.category}}</h3>
     </p>

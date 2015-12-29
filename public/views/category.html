@@ -6,7 +6,7 @@
                 <p>
                 <h3>{{post.category}}</h3>
                 </p>
-                <p class="blog-post-meta">{{post.date | date:'medium'}} Author {{post.author}}</p>
+                <p class="blog-post-meta">{{post.date | date:'medium'}} Author {{post.author.nickname}}</p>
                 <image ng-src="{{post.image.path}}" class="img-responsive img-rounded"></image>
                 <p class="lead">{{post.excerption}}
                     <nav></nav>

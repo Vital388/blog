@@ -29,7 +29,7 @@ router.get('/categories/:catname', function (req, res, next) {
 
         }
 
-        model.posts.find({category: catname}).skip(skipFrom).limit(resultsPerPage).populate('image').sort('-date').exec(function (err, data) {
+        model.posts.find({category: catname}).skip(skipFrom).limit(resultsPerPage).populate('image','path').populate('author','nickname').sort('-date').exec(function (err, data) {
             res.json({posts: data, pages_count: pages_count});
         })
     });
@@ -47,7 +47,7 @@ router.get('/:postId', function (req, res, next) {
     var postId = req.params.postId;
 
 
-    model.posts.findOne({_id: postId}).populate('image').exec(function (err, post) {
+    model.posts.findOne({_id: postId}).populate('image','path').populate('author','nickname').exec(function (err, post) {
         if (post) {
 
             res.json(post);
@@ -75,7 +75,7 @@ router.get('/author/:username', function (req, res, next) {
 
         }
 
-        model.posts.find({author: username}).skip(skipFrom).limit(resultsPerPage).populate('image').sort('-date').exec(function (err, data) {
+        model.posts.find({author: username}).skip(skipFrom).limit(resultsPerPage).populate('image','path').populate('author','nickname').sort('-date').exec(function (err, data) {
             res.json({posts: data, pages_count: pages_count})
         });
 
