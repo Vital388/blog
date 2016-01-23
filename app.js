@@ -37,13 +37,17 @@ app.use('/api/users', users);
 app.use('/api/posts', posts);
 app.use('/*', function(req, res, next) {
     if(req.user) {
-        res.cookie('user', JSON.stringify ( {nickname:req.user.nickname,_id:req.user._id} ) )
-    }else{
-        res.cookie('user', JSON.stringify( {nickname:null}) )
+        if(req.user.displayName) {
+            res.cookie('user', JSON.stringify({nickname: req.user.displayName, _id: req.user._id}))
+        }
+        if(req.user.nickname) {
+            res.cookie('user', JSON.stringify({nickname: req.user.nickname, _id: req.user._id}))
+        }
+    }else {
+        res.cookie('user', JSON.stringify( {nickname:null}));
+
     }
-
     res.sendFile("main.html", {root: __dirname + "/public"});
-
 });
 
 // catch 404 and forward to error handler

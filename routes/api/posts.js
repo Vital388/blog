@@ -11,26 +11,29 @@ var s3obj = require('../../lib/amazonS3');
 
 /* GET users listing. */
 
+router.post('/categories/:catname',ensureAuthenticated ,function (req, res, next) {
 
+    var catname = req.params.catname;
+    var cat= new model.categories({
+            name:catname
+        });
+    cat.save(
+        res.json({accept:true})
+    );
+});
 router.get('/categories/:catname', function (req, res, next) {
-    console.log('catname =' + req.params.catname)
+
     var pages_count = 0;
     var catname = req.params.catname;
     var pageNumber = req.query.page || 1;
-    var resultsPerPage = req.query.resultsPerPage || 2;
+    var resultsPerPage = req.query.resultsPerPage || 5;
     var skipFrom = (pageNumber * resultsPerPage) - resultsPerPage;
 
     model.posts.count({category: catname}, function (err, c) {
-        if (c % resultsPerPage) {
-            pages_count = c / resultsPerPage + 1;
 
-        } else {
-            pages_count = c / resultsPerPage;
-
-        }
 
         model.posts.find({category: catname}).skip(skipFrom).limit(resultsPerPage).populate('image','path').populate('author','nickname').sort('-date').exec(function (err, data) {
-            res.json({posts: data, pages_count: pages_count});
+            res.json({posts: data, pages_count: c});
         })
     });
 });
@@ -89,17 +92,9 @@ router.get('/', function (req, res, next) {
     var resultsPerPage = req.query.resultsPerPage || 5;
     var skipFrom = (pageNumber * resultsPerPage) - resultsPerPage;
     model.posts.count({}, function (err, c) {
-        if (c % resultsPerPage) {
-
-            pages_count = c / resultsPerPage + 1;
-
-        } else {
-            pages_count = c / resultsPerPage;
-
-        }
 
         model.posts.find().skip(skipFrom).limit(resultsPerPage).populate('image','path').populate('author','nickname').sort('-date').exec(function (err, data) {
-            res.json({posts: data, pages_count: pages_count})
+            res.json({posts: data, pages_count: c})
         });
 
     })
@@ -111,13 +106,7 @@ router.post('/', ensureAuthenticated, function (req, res, next) {
     var form = new multiparty.Form({autoFields: false, autoFiles: false});
     var post = [];
     var posts;
-    var categories;
     form.on('close', function () {
-        console.log(post['title'])
-        categories = new model.categories({
-            name: post['category']
-        });
-        categories.save();
         posts = new model.posts({
             author: req.user._id,
             title: post['title'],

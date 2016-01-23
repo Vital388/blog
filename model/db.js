@@ -26,7 +26,7 @@ var blogSchema = new Schema({
     }
 });
 var categoriesSchema= new Schema({
-    name:{type: String , unique: true,ref: 'posts'}
+    name:{type: String , unique: true}
 
 });
 var imageSchema = new Schema({
@@ -46,12 +46,20 @@ var usersSchema = new Schema({
     sex: String,
     date: {type: Date, default: Date.now},
     avatar: String
+
 });
+var facebookSchema=new Schema({
+    id: {type: String, unique: true},
+    displayName: String
+});
+
 var posts = mongoose.model('posts', blogSchema);
 var images = mongoose.model('images', imageSchema);
 var users =mongoose.model('users', usersSchema);
 var categories =mongoose.model('categories', categoriesSchema);
+var facebookUsers=mongoose.model('facebookUsers', facebookSchema);
 exports.posts = posts;
 exports.images = images;
 exports.users = users;
 exports.categories = categories;
+exports.facebookUsers = facebookUsers;

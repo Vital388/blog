@@ -6,7 +6,9 @@
     </div>
     <div class="form-group">
         <label for="category">Category:</label>
-        <input type="text" ng-model="form.category" name="category" class="form-control"/>
+        <select ng-model="form.category" name="category" >
+            <option ng-repeat="cat in categories">{{cat.name}}</option>
+        </select>
     </div>
     <div class="form-group">
         <label for="body">Body:</label>

@@ -52,6 +52,14 @@ router.post('/signIn',
         res.cookie('user', JSON.stringify({nickname:req.user.nickname,_id:req.user._id}))
         res.send(200);
     });
+router.get('/auth/facebook' ,passport.authenticate('facebook',{scope:'user_about_me'}));
+router.get('/auth/facebook/callback',
+    passport.authenticate('facebook'),
+    function(req,res){
+        res.redirect('/');
+
+    });
+
 
 /*
     var form = new multiparty.Form({autoFields: false, autoFiles: false});

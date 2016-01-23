@@ -1,14 +1,43 @@
 /**
  * Created by Lollypop on 02.12.2015.
  */
+function IndexCtrl($scope, $http) {
 
-function IndexCtrl($scope, $http, $rootScope, $cookies) {
-    $http.get('/api/posts').
-        success(function (data, status, headers, config) {
-            $scope.posts = data.posts;
-            $scope.pages_count = data.pages_count;
-        });
+    $scope.currentPage = 1;
+
+
+    $scope.setPage = function (pageNo) {
+        $scope.currentPage = pageNo;
+
+    };
+
+    $scope.pageChanged = function() {
+        //$log.log('Page changed to: ' + $scope.currentPage);
+        $http.get('/api/posts?page=' + $scope.currentPage).
+            success(function (data, status, headers, config) {
+
+                $scope.posts = data.posts;
+                $scope.totalItems = data.pages_count;
+            });
+    };
+    $scope.pageChanged();
+    $scope.itemsPerPage =5;
+    $scope.maxSize = 1000;
+    $scope.bigTotalItems = 175;
+    $scope.bigCurrentPage = 1;
+
 }
+
+
+function AddcatCtrl($scope,$http) {
+    $scope.submitCat = function () {
+        /* var formData = new FormData();
+         formData.append('login', $scope.form.login);
+         formData.append('password', $scope.form.password);*/
+        $http.post('/api/posts/categories/' + $scope.catname);
+    }
+}
+
 function ReadPostCtrl($scope, $http, $routeParams) {
     $http.get('/api/posts/' + $routeParams.id).
         success(function (post) {
@@ -16,8 +45,12 @@ function ReadPostCtrl($scope, $http, $routeParams) {
         });
 }
 function AddPostCtrl($scope, $http, $location) {
-    $scope.postID={};
+    $scope.postID = {};
     $scope.form = {};
+    $http.get('/api/posts/categories').
+        success(function (categories) {
+            $scope.categories =categories;
+        });
     $scope.submitPost = function () {
         var formData = new FormData();
         formData.append('title', $scope.form.title);
@@ -30,10 +63,10 @@ function AddPostCtrl($scope, $http, $location) {
         }).
             success(function (status) {
 
-                if(!status.access){
+                if (!status.access) {
                     $location.path('/signIn');
-                }else{
-                    $scope.postID=status.postID
+                } else {
+                    $scope.postID = status.postID
                 }
             });
     }
@@ -41,17 +74,21 @@ function AddPostCtrl($scope, $http, $location) {
 
 }
 function EditPostCtrl($scope, $http, $location, $routeParams) {
-    $scope.postID={};
+    $scope.postID = {};
     $scope.form = {};
+    $scope.categories = {};
     $http.get('/api/posts/' + $routeParams.id).
         success(function (post) {
             $scope.form = post;
-            $scope.postID=post._id;
-            if(post.image){
-                $scope.srcImage=post.image.path;
+            $scope.postID = post._id;
+            if (post.image) {
+                $scope.srcImage = post.image.path;
             }
         });
-
+    $http.get('/api/posts/categories').
+        success(function (categories) {
+            $scope.categories =categories;
+        });
 
     $scope.editPost = function () {
 
@@ -68,9 +105,9 @@ function EditPostCtrl($scope, $http, $location, $routeParams) {
         }).
             success(function (status) {
 
-                if(!status.access){
+                if (!status.access) {
                     $location.path('/signIn');
-                }else{
+                } else {
                     $location.path('/');
                 }
             });
@@ -84,9 +121,9 @@ function DeletePostCtrl($scope, $http, $location, $routeParams) {
         $http.delete('/api/posts/' + $routeParams.id).
             success(function (status) {
 
-                if(!status.access){
+                if (!status.access) {
                     $location.path('/signIn');
-                }else{
+                } else {
                     $location.path('/');
                 }
             });
@@ -117,7 +154,7 @@ function SignIn($scope, $rootScope, $http, $location, $cookies) {
     }
 
 }
-function SignOn($scope, $rootScope, $http, $location, $cookies) {
+function SignOn($scope,$http, $location) {
     $scope.form = {};
     $scope.signOn = function () {
         var formData = new FormData();
@@ -137,27 +174,45 @@ function SignOn($scope, $rootScope, $http, $location, $cookies) {
     }
 
 }
-function CategoryCtrl($scope, $http,$routeParams, $rootScope, $cookies) {
-    $http.get('/api/posts/categories/'+$routeParams.catname).
-        success(function (data, status, headers, config) {
-            $scope.posts = data.posts;
-            $scope.pages_count = data.pages_count;
-        });
+function CategoryCtrl($scope, $http, $routeParams) {
+    $scope.currentPage = 1;
+
+
+    $scope.setPage = function (pageNo) {
+        $scope.currentPage = pageNo;
+
+    };
+
+    $scope.pageChanged = function() {
+        //$log.log('Page changed to: ' + $scope.currentPage);
+        $http.get('/api/posts/categories/' + $routeParams.catname+'?page='+ $scope.currentPage).
+            success(function (data, status, headers, config) {
+
+                $scope.posts = data.posts;
+                $scope.totalItems = data.pages_count;
+            });
+    };
+    $scope.pageChanged();
+    $scope.itemsPerPage =5;
+    $scope.maxSize = 1000;
+    $scope.bigTotalItems = 175;
+    $scope.bigCurrentPage = 1;
+
 }
-function DashboardCtrl($scope, $http,$location,$routeParams, $rootScope, $cookies) {
-    if ($rootScope.currentUser){
-    $http.get('/api/posts/author/'+$rootScope.currentUser._id).
-        success(function (data, status, headers, config) {
-            $scope.posts = data.posts;
-            $scope.pages_count = data.pages_count;
-        });
-    }else{
+function DashboardCtrl($scope, $http, $location, $rootScope ) {
+    if ($rootScope.currentUser) {
+        $http.get('/api/posts/author/' + $rootScope.currentUser._id).
+            success(function (data, status, headers, config) {
+                $scope.posts = data.posts;
+                $scope.pages_count = data.pages_count;
+            });
+    } else {
 
         $location.path('/signIn');
     }
 }
 angular.module('blog')
-    .controller('LogOutCtrl', function ($scope, $location,$rootScope,$cookies,$http) {
+    .controller('LogOutCtrl', function ($scope, $location, $rootScope, $cookies, $http) {
         $scope.logout = function () {
             $cookies.remove('user');
             $rootScope.currentUser = null;
@@ -168,47 +223,54 @@ angular.module('blog')
 
         }
     })
-    .controller('categoriesCtrl', function ($scope, $location,$rootScope,$cookies,$http) {
-        $scope.categories={};
+    .controller('categoriesCtrl', function ($scope,  $http) {
+        $scope.categories = {};
         $http.get('/api/posts/categories')
             .success(function (categories) {
-                $scope.categories=categories;
+                $scope.categories = categories;
             })
 
 
-
     })
-    .controller('imageCtrl', function ($scope,$route, $location,$rootScope,$cookies,$http) {
+    .controller('imageCtrl', function ($scope, $http) {
 
         $scope.submitImage = function () {
             var formData = new FormData();
             formData.append('image', $scope.myFile);
-            $http.post('/api/posts/image/'+$scope.postID, formData, {
+            $http.post('/api/posts/image/' + $scope.postID, formData, {
                 transformRequest: angular.identity,
                 headers: {'Content-Type': undefined}
             }).
                 success(function (status) {
-                    if(!status.access){
+                    if (!status.access) {
                         //$location.path('/signIn');
 
-                    }else{
-                        $scope.srcImage=status.image;
+                    } else {
+                        $scope.srcImage = status.image;
                     }
                 });
         };
         $scope.deleteImage = function () {
-            $http.delete('/api/posts/image/'+$scope.postID )
+            $http.delete('/api/posts/image/' + $scope.postID)
                 .success(function (status) {
 
-                    if(!status.access){
-                       // $location.path('/signIn');
+                    if (!status.access) {
+                        // $location.path('/signIn');
                         //$route.reload();
-                    }else{
-                        $scope.srcImage=null;
-                       // $location.path();
+                    } else {
+                        $scope.srcImage = null;
+                        // $location.path();
                     }
                 });
         }
 
 
+    }).controller('navBlogCtrl', function ($scope, $location) {
+        $scope.getClass = function (path) {
+            if ($location.path() === path) {
+                return 'active';
+            } else {
+                return '';
+            }
+        }
     })

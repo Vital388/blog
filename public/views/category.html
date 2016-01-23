@@ -16,6 +16,7 @@
                 </ul>
             </div>
         </div>
+        <uib-pagination  ng-change="pageChanged()" items-per-page="itemsPerPage" boundary-links="true" total-items="totalItems" ng-model="currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></uib-pagination>
     </div>
     <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
         <div class="sidebar-module" ng-controller="categoriesCtrl">

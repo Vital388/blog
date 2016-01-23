@@ -1,7 +1,7 @@
 /**
  * Created by Lollypop on 02.12.2015.
  */
-angular.module('blog', ['ngRoute', 'blog.directives','ngCookies', 'ngSanitize']).
+angular.module('blog', ['ngRoute', 'blog.directives','ngCookies', 'ngSanitize', 'ui.bootstrap']).
     config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
         $routeProvider.
             when('/', {
@@ -40,16 +40,20 @@ angular.module('blog', ['ngRoute', 'blog.directives','ngCookies', 'ngSanitize'])
                 templateUrl: '/views/dashboard.html',
                 controller: DashboardCtrl
             }).
+            when('/addCat/', {
+                templateUrl: '/views/addCategory.html',
+                controller: AddcatCtrl
+            }).
             otherwise({
                 redirectTo: '/'
             });
         $locationProvider.html5Mode(true);
     }])
-    .run(function ($rootScope,$cookies) {
+    .run(function ($rootScope,$cookies,$routeParams) {
         $rootScope.currentUser=$cookies.getObject('user');
         if(!$rootScope.currentUser.nickname){
             $rootScope.currentUser=null;
         }
 
+    })
 
-    });
