@@ -5,5 +5,5 @@
     <h3>{{post.category}}</h3>
     </p>
     <image ng-src="{{post.image.path}}" class="img-responsive"></image>
-    <p class="lead" ng-bind-html="post.body" ></p>
+    <p class="lead" ng-bind-html="post.body | trusted" ></p>
 </div>
