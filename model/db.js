@@ -12,7 +12,7 @@ mongoose.connect(DATABASE, function (error) {
 var Schema = mongoose.Schema;
 var blogSchema = new Schema({
     title: String,
-    author: {type: Schema.Types.ObjectId, ref: 'users'},
+    author: {type: Schema.Types.ObjectId,ref:'users'},
     body: String,
     excerption: String,
     category: String,

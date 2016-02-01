@@ -8,8 +8,7 @@
                 </p>
                 <p class="blog-post-meta">{{post.date | date:'medium'}} Author {{post.author.nickname}}</p>
                 <image ng-src="{{post.image.path}}" class="img-responsive img-rounded"></image>
-                <p class="lead">{{post.excerption}}
-                    <nav></nav>
+                <p class="lead" ng-bind-html="post.excerption">
                 </p>
                 <ul class="pager">
                     <li><a href="/readPost/{{post._id}}">Read post</a></li>
