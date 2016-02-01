@@ -106,6 +106,7 @@ router.post('/', ensureAuthenticated, function (req, res, next) {
     var form = new multiparty.Form({autoFields: false, autoFiles: false});
     var post = [];
     var posts;
+    console.log(req.user);
     form.on('close', function () {
         posts = new model.posts({
             author: req.user._id,

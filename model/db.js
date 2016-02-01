@@ -30,7 +30,7 @@ var categoriesSchema= new Schema({
 
 });
 var imageSchema = new Schema({
-    author:{type: Schema.Types.ObjectId, ref: 'users'},
+    author:{type: Schema.Types.ObjectId},
     _post: {type: Schema.Types.ObjectId, ref: 'posts'},
     name: String,
     size: String,

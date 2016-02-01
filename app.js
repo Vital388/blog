@@ -1,6 +1,5 @@
 var passport = require('passport');
 var pass = require('./lib/passport.js');
-
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -11,6 +10,7 @@ var session = require('express-session');
 var users = require('./routes/api/users');
 var posts = require('./routes/api/posts');
 var app = express();
+app.use(favicon(__dirname + '/public/favicon.ico'));
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');

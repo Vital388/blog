@@ -1,7 +1,10 @@
 /*
  * Globals
  */
-
+@font-face {
+    font-family: dayLater;
+    src: url(fonts/28_Days_Later.ttf);
+}
 body {
     font-family: Georgia, "Times New Roman", Times, serif;
     color: #555;
@@ -172,4 +175,21 @@ h6, .h6 {
 .logOut{
     cursor: pointer;
 
+}
+.logo
+{
+   background: url(/images/logo1.jpg);
+    height: 250px;
+    margin-bottom: 20px;
+}
+.logoText{
+    /*text-align: center;*/
+    position: relative;
+    color	:rgba(240, 255, 255, 0.9);
+    font-family: dayLater;
+    font-size: 55px;
+    letter-spacing		: 5px;
+    background-color: rgba(0, 96, 170, 0.9);
+    padding			: 10px;
+    top:150px;
 }
