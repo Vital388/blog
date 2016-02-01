@@ -1,5 +1,5 @@
 {
-  "clientID" : "444563615746483" ,
-  "clientSecret" : "0bbd8c7263a333cf49ee9befb1068b4f",
-  "callbackURL" : "http://localhost:5000/api/users/auth/facebook/callback"
+  "clientID" : "440363692833142" ,
+  "clientSecret" : "6198bfee6a1abbdea9e160bcf34c3103",
+  "callbackURL" : "http://fit-vit-blog/api/users/auth/facebook/callback"
 }
