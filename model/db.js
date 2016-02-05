@@ -12,7 +12,7 @@ mongoose.connect(DATABASE, function (error) {
 var Schema = mongoose.Schema;
 var blogSchema = new Schema({
     title: String,
-    author: {type: Schema.Types.ObjectId,ref:'users'},
+    author: {type: Schema.Types.ObjectId,ref:'facebookUsers'},
     body: String,
     excerption: String,
     category: String,
@@ -30,7 +30,7 @@ var categoriesSchema= new Schema({
 
 });
 var imageSchema = new Schema({
-    author:{type: Schema.Types.ObjectId},
+    author:{type: Schema.Types.ObjectId , ref: 'facebookUsers'},
     _post: {type: Schema.Types.ObjectId, ref: 'posts'},
     name: String,
     size: String,

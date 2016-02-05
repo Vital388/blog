@@ -93,7 +93,7 @@ router.get('/', function (req, res, next) {
     var skipFrom = (pageNumber * resultsPerPage) - resultsPerPage;
     model.posts.count({}, function (err, c) {
 
-        model.posts.find().skip(skipFrom).limit(resultsPerPage).populate('image','path').populate('author','nickname').sort('-date').exec(function (err, data) {
+        model.posts.find().skip(skipFrom).limit(resultsPerPage).populate('image','path').populate('author','displayName').sort('-date').exec(function (err, data) {
             res.json({posts: data, pages_count: c})
         });
 

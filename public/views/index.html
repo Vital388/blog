@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-sm-8 blog-main">
+    <div class="col-md-8 blog-main">
         <div class="logo">
             <span class="logoText">
 
@@ -10,10 +10,12 @@
         <div ng-repeat="post in posts" class="div">
             <div class="blog-post">
                 <h2 class="blog-post-title">{{post.title}}</h2>
+
                 <p>
+
                 <h3>{{post.category}}</h3>
                 </p>
-                <p class="blog-post-meta">{{post.date | date:'medium'}} Author {{post.author.nickname}}</p>
+                <p class="blog-post-meta">{{post.date | date:'medium'}} Author {{post.author.displayName}}</p>
                 <image ng-src="{{post.image.path}}" class="img-responsive img-rounded"></image>
                 <p class="lead" ng-bind-html="post.excerption">
                 </p>
@@ -22,12 +24,14 @@
                 </ul>
             </div>
         </div>
-        <uib-pagination  ng-change="pageChanged()" items-per-page="itemsPerPage" boundary-links="true" total-items="totalItems" ng-model="currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></uib-pagination>
+        <uib-pagination ng-change="pageChanged()" items-per-page="itemsPerPage" boundary-links="true"
+                        total-items="totalItems" ng-model="currentPage" class="pagination-sm" previous-text="&lsaquo;"
+                        next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></uib-pagination>
     </div>
-    <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+    <div class="col-md-3 col-md-offset-1 blog-sidebar">
         <div class="sidebar-module" ng-controller="categoriesCtrl">
             <h4>Categories</h4>
-            <ol class="list-unstyled"  ng-repeat="category in categories" >
+            <ol class="list-unstyled" ng-repeat="category in categories">
                 <li><a href="/categories/{{category.name}}">{{category.name}}</a></li>
             </ol>
         </div>
