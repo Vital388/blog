@@ -40,9 +40,12 @@ angular.module('blog', ['ngRoute', 'blog.directives','ngCookies', 'ngSanitize', 
                 templateUrl: '/views/dashboard.html',
                 controller: DashboardCtrl
             }).
-            when('/addCat/', {
+            when('/addCat', {
                 templateUrl: '/views/addCategory.html',
                 controller: AddcatCtrl
+            }).
+            when('/about', {
+                templateUrl: '/views/about.html',
             }).
             otherwise({
                 redirectTo: '/'

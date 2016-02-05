@@ -4,7 +4,7 @@
             <div class="col-md-8">
                 <nav class="blog-nav" ng-controller="navBlogCtrl">
                     <a href="/" class="blog-nav-item" ng-class="getClass('/')">Home</a>
-                    <a href="#" class="blog-nav-item" ng-class="getClass('/#')">About</a>
+                    <a href="/about" class="blog-nav-item" ng-class="getClass('/about')">About</a>
                     <a href="/signOn" class="blog-nav-item" ng-class="getClass('/signOn')">Sign ON</a>
                     <a href="/signIn" class="blog-nav-item" ng-class="getClass('/signIn')">Log IN</a>
                     <a ng-show="currentUser.nickname" href="/dashboard/{{currentUser.nickname}}" class="blog-nav-item" ng-class="getClass('/dashboard/'+currentUser.nickname)">My articles</a>
