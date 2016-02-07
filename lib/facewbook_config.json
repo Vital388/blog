@@ -1,5 +1,0 @@
-{
-  "clientID" : "440363692833142" ,
-  "clientSecret" : "6198bfee6a1abbdea9e160bcf34c3103",
-  "callbackURL" : "http://fit-vit-blog.herokuapp.com/api/users/auth/facebook/callback"
-}
