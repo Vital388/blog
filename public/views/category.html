@@ -6,7 +6,7 @@
                 <p>
                 <h3>{{post.category}}</h3>
                 </p>
-                <p class="blog-post-meta">{{post.date | date:'medium'}} Author {{post.author.nickname}}</p>
+                <p class="blog-post-meta">{{post.date | date:'medium'}} Author {{post.author.displayName}}</p>
                 <image ng-src="{{post.image.path}}" class="img-responsive img-rounded"></image>
                 <p class="lead" ng-bind-html="post.excerption">
 
@@ -16,7 +16,16 @@
                 </ul>
             </div>
         </div>
-        <uib-pagination  ng-change="pageChanged()" items-per-page="itemsPerPage" boundary-links="true" total-items="totalItems" ng-model="currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></uib-pagination>
+        <div >
+
+        <uib-pagination ng-show="ShowPagination" ng-change="pageChanged()" items-per-page="itemsPerPage" boundary-links="true"
+                        total-items="totalItems" ng-model="currentPage" class="pagination-sm" previous-text="&lsaquo;"
+                        next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></uib-pagination>
+            <p ng-show="EmptyCat" >
+                This category is empty
+            </p>
+        </div>
+
     </div>
     <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
         <div class="sidebar-module" ng-controller="categoriesCtrl">

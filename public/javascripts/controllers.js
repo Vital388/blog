@@ -3,9 +3,12 @@
  */
 function IndexCtrl($scope, $http) {
 
-    $scope.currentPage = 1;
-
-
+   // $scope.currentPage = 1;
+    $scope.itemsPerPage =5;
+    $scope.maxSize = 1000;
+    $scope.bigTotalItems = 175;
+    $scope.bigCurrentPage = 1;
+    $scope.ShowPagination=false;
     $scope.setPage = function (pageNo) {
         $scope.currentPage = pageNo;
 
@@ -18,13 +21,14 @@ function IndexCtrl($scope, $http) {
 
                 $scope.posts = data.posts;
                 $scope.totalItems = data.pages_count;
+                if ($scope.totalItems > $scope.itemsPerPage){
+                    $scope.ShowPagination=true;
+                }
             });
     };
+
     $scope.pageChanged();
-    $scope.itemsPerPage =5;
-    $scope.maxSize = 1000;
-    $scope.bigTotalItems = 175;
-    $scope.bigCurrentPage = 1;
+
 
 }
 
@@ -175,8 +179,14 @@ function SignOn($scope,$http, $location) {
 
 }
 function CategoryCtrl($scope, $http, $routeParams) {
-    $scope.currentPage = 1;
 
+    $scope.EmptyCat=true;
+
+    $scope.currentPage = 1;
+    $scope.itemsPerPage =5;
+    $scope.maxSize = 1000;
+    $scope.bigTotalItems = 175;
+    $scope.bigCurrentPage = 1;
 
     $scope.setPage = function (pageNo) {
         $scope.currentPage = pageNo;
@@ -190,22 +200,54 @@ function CategoryCtrl($scope, $http, $routeParams) {
 
                 $scope.posts = data.posts;
                 $scope.totalItems = data.pages_count;
+                if( $scope.totalItems) {
+
+                    $scope.EmptyCat=false;
+
+                    if ($scope.totalItems > $scope.itemsPerPage) {
+                        $scope.ShowPagination = true;
+                    }
+                }
             });
     };
     $scope.pageChanged();
+
+
+}
+function DashboardCtrl($scope, $http, $location, $rootScope ) {
+    $scope.currentPage = 1;
     $scope.itemsPerPage =5;
     $scope.maxSize = 1000;
     $scope.bigTotalItems = 175;
     $scope.bigCurrentPage = 1;
+    $scope.ShowPagination=false;
 
-}
-function DashboardCtrl($scope, $http, $location, $rootScope ) {
-    if ($rootScope.currentUser) {
-        $http.get('/api/posts/author/' + $rootScope.currentUser._id).
+
+    $scope.setPage = function (pageNo) {
+        $scope.currentPage = pageNo;
+
+    };
+
+    $scope.pageChanged = function() {
+        //$log.log('Page changed to: ' + $scope.currentPage);
+        $http.get('/api/posts/author/' + $rootScope.currentUser._id+'?page=' + $scope.currentPage).
             success(function (data, status, headers, config) {
+
                 $scope.posts = data.posts;
-                $scope.pages_count = data.pages_count;
+                $scope.totalItems = data.pages_count;
+                if ($scope.totalItems > $scope.itemsPerPage){
+                    $scope.ShowPagination=true;
+                }
             });
+    };
+
+
+    if ($rootScope.currentUser) {
+
+
+        $scope.pageChanged();
+
+
     } else {
 
         $location.path('/signIn');

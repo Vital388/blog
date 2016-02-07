@@ -24,7 +24,7 @@
                 </ul>
             </div>
         </div>
-        <uib-pagination ng-change="pageChanged()" items-per-page="itemsPerPage" boundary-links="true"
+        <uib-pagination ng-show="ShowPagination" ng-change="pageChanged()" items-per-page="itemsPerPage" boundary-links="true"
                         total-items="totalItems" ng-model="currentPage" class="pagination-sm" previous-text="&lsaquo;"
                         next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></uib-pagination>
     </div>
