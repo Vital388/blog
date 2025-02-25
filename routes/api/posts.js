@@ -7,106 +7,135 @@ var Crypto = require('../../lib/random');
 var ensureAuthenticated = require('../../lib/auth');
 var accessRight = require('../../lib/accessRight');
 
-router.post('/categories/:catname', ensureAuthenticated, function (req, res, next) {
-    var catname = req.params.catname;
-    var cat = new model.categories({ name: catname });
-    cat.save(function (err) {
+// POST /categories/:catname
+router.post('/categories/:catname', ensureAuthenticated, async function (req, res, next) {
+    try {
+        const catname = req.params.catname;
+        const cat = new model.categories({ name: catname });
+        await cat.save();
         res.json({ accept: true });
-    });
+    } catch (err) {
+        next(err); // Pass error to Express error handler
+    }
 });
 
-router.get('/categories/:catname', function (req, res, next) {
-    var catname = req.params.catname;
-    var pageNumber = req.query.page || 1;
-    var resultsPerPage = req.query.resultsPerPage || 5;
-    var skipFrom = (pageNumber * resultsPerPage) - resultsPerPage;
+// GET /categories/:catname
+router.get('/categories/:catname', async function (req, res, next) {
+    try {
+        const catname = req.params.catname;
+        const pageNumber = parseInt(req.query.page || 1);
+        const resultsPerPage = parseInt(req.query.resultsPerPage || 5);
+        const skipFrom = (pageNumber * resultsPerPage) - resultsPerPage;
 
-    model.posts.count({ category: catname }, function (err, c) {
-        model.posts.find({ category: catname })
+        const count = await model.posts.countDocuments({ category: catname });
+        const data = await model.posts.find({ category: catname })
             .skip(skipFrom)
             .limit(resultsPerPage)
             .populate('image', 'path')
             .populate('author', 'displayName')
             .sort('-date')
-            .exec(function (err, data) {
-                res.json({ posts: data, pages_count: c });
-            });
-    });
+            .exec();
+        res.json({ posts: data, pages_count: count });
+    } catch (err) {
+        next(err);
+    }
 });
 
-router.get('/categories', function (req, res, next) {
-    model.categories.find().exec(function (err, data) {
+// GET /categories
+router.get('/categories', async function (req, res, next) {
+    try {
+        const data = await model.categories.find().exec();
         res.json(data);
-    });
+    } catch (err) {
+        next(err);
+    }
 });
 
-router.get('/:postId', function (req, res, next) {
-    var postId = req.params.postId;
-    model.posts.findOne({ _id: postId })
-        .populate('image', 'path')
-        .populate('author', 'nickname')
-        .exec(function (err, post) {
-            if (post) {
-                res.json(post);
-            } else {
-                res.sendStatus(404);
-            }
-        });
+// GET /:postId
+router.get('/:postId', async function (req, res, next) {
+    try {
+        const postId = req.params.postId;
+        const post = await model.posts.findOne({ _id: postId })
+            .populate('image', 'path')
+            .populate('author', 'nickname')
+            .exec();
+        if (post) {
+            res.json(post);
+        } else {
+            res.sendStatus(404);
+        }
+    } catch (err) {
+        next(err);
+    }
 });
 
-router.get('/author/:username', function (req, res, next) {
-    var username = req.params.username;
-    var pageNumber = req.query.page || 1;
-    var resultsPerPage = req.query.resultsPerPage || 5;
-    var skipFrom = (pageNumber * resultsPerPage) - resultsPerPage;
-    model.posts.count({}, function (err, c) {
-        model.posts.find({ author: username })
+// GET /author/:username
+router.get('/author/:username', async function (req, res, next) {
+    try {
+        const username = req.params.username;
+        const pageNumber = parseInt(req.query.page || 1);
+        const resultsPerPage = parseInt(req.query.resultsPerPage || 5);
+        const skipFrom = (pageNumber * resultsPerPage) - resultsPerPage;
+
+        const count = await model.posts.countDocuments({ author: username }); // Fixed to count author's posts
+        const data = await model.posts.find({ author: username })
             .skip(skipFrom)
             .limit(resultsPerPage)
             .populate('image', 'path')
             .populate('author', 'displayName')
             .sort('-date')
-            .exec(function (err, data) {
-                res.json({ posts: data, pages_count: c });
-            });
-    });
+            .exec();
+        res.json({ posts: data, pages_count: count });
+    } catch (err) {
+        next(err);
+    }
 });
 
-router.get('/', function (req, res, next) {
-    var pageNumber = req.query.page || 1;
-    var resultsPerPage = req.query.resultsPerPage || 5;
-    var skipFrom = (pageNumber * resultsPerPage) - resultsPerPage;
-    model.posts.count({}, function (err, c) {
-        model.posts.find()
+// GET /
+router.get('/', async function (req, res, next) {
+    try {
+        const pageNumber = parseInt(req.query.page || 1);
+        const resultsPerPage = parseInt(req.query.resultsPerPage || 5);
+        const skipFrom = (pageNumber * resultsPerPage) - resultsPerPage;
+
+        const count = await model.posts.countDocuments({});
+        const data = await model.posts.find()
             .skip(skipFrom)
             .limit(resultsPerPage)
             .populate('image', 'path')
             .populate('author', 'displayName')
             .sort('-date')
-            .exec(function (err, data) {
-                res.json({ posts: data, pages_count: c });
-            });
-    });
+            .exec();
+        res.json({ posts: data, pages_count: count });
+    } catch (err) {
+        next(err);
+    }
 });
 
+// POST /
 router.post('/', ensureAuthenticated, function (req, res, next) {
-    var form = new multiparty.Form({ autoFields: false, autoFiles: false });
-    var post = {};
+    const form = new multiparty.Form({ autoFields: false, autoFiles: false });
+    const post = {};
     form.on('close', function () {
-        var posts = new model.posts({
+        const newPost = new model.posts({
             author: req.user._id,
             title: post['title'],
             body: post['body'],
             excerption: post['excerption'],
             category: post['category']
         });
-        posts.save(function (err) {
-            if (err) console.log(err);
-            res.json({ access: true, postID: posts._id });
-        });
+        newPost.save()
+            .then((savedPost) => {
+                res.json({ access: true, postID: savedPost._id });
+            })
+            .catch((err) => {
+                console.error(err);
+                res.status(500).send(err);
+            });
     });
     form.on('error', function (err) {
         console.log('Error parsing form: ' + err.stack);
+        next(err);
     });
     form.on('field', function (name, value) {
         post[name] = value;
@@ -114,23 +143,33 @@ router.post('/', ensureAuthenticated, function (req, res, next) {
     form.parse(req);
 });
 
+// PUT /:postId
 router.put('/:postId', ensureAuthenticated, accessRight.accessRightPost, function (req, res, next) {
-    var postId = req.params.postId;
-    var form = new multiparty.Form({ autoFields: false, autoFiles: false });
-    var post = {};
+    const postId = req.params.postId;
+    const form = new multiparty.Form({ autoFields: false, autoFiles: false });
+    const post = {};
     form.on('close', function () {
-        model.posts.update({ _id: postId }, {
+        model.posts.updateOne({ _id: postId }, {
             title: post['title'],
             body: post['body'],
             excerption: post['excerption'],
             category: post['category']
-        }, function (err, result) {
-            if (err) return res.status(500).send(err);
-            res.json({ access: true });
-        });
+        })
+            .then((result) => {
+                if (result.matchedCount > 0) {
+                    res.json({ access: true });
+                } else {
+                    res.status(404).send('Post not found');
+                }
+            })
+            .catch((err) => {
+                console.error(err);
+                res.status(500).send(err);
+            });
     });
     form.on('error', function (err) {
         console.log('Error parsing form: ' + err.stack);
+        next(err);
     });
     form.on('field', function (name, value) {
         post[name] = value;
@@ -138,21 +177,30 @@ router.put('/:postId', ensureAuthenticated, accessRight.accessRightPost, functio
     form.parse(req);
 });
 
-router.delete('/:postId', ensureAuthenticated, accessRight.accessRightPost, function (req, res, next) {
-    var postId = req.params.postId;
-    model.posts.remove({ _id: postId }, function (err, result) {
-        if (err) return res.status(500).send(err);
-        res.json({ access: true });
-    });
+// DELETE /:postId
+router.delete('/:postId', ensureAuthenticated, accessRight.accessRightPost, async function (req, res, next) {
+    try {
+        const postId = req.params.postId;
+        const result = await model.posts.deleteOne({ _id: postId });
+        if (result.deletedCount > 0) {
+            res.json({ access: true });
+        } else {
+            res.status(404).send('Post not found');
+        }
+    } catch (err) {
+        next(err);
+    }
 });
 
+// POST /image/:postId
 router.post('/image/:postId', ensureAuthenticated, accessRight.accessRightPost, function (req, res, next) {
-    var postId = req.params.postId;
+    const postId = req.params.postId;
     res.json({ access: false }); // Disable image upload without S3
 });
 
+// DELETE /image/:postId
 router.delete('/image/:postId', ensureAuthenticated, accessRight.accessRightImage, function (req, res, next) {
-    var postId = req.params.postId;
+    const postId = req.params.postId;
     res.json({ access: false }); // Disable image delete without S3
 });
 
