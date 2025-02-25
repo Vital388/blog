@@ -3,51 +3,62 @@
  */
 var mongoose = require('mongoose');
 var DATABASE = require('../lib/db_conf.js');
+
 console.log(DATABASE);
-mongoose.connect(DATABASE.dbUrl, function (error) {  // Changed from DATABASE to DATABASE.dbUrl
-    if (error) {
-        console.log(error);
-    }
-});
+
+// Use Promises instead of callback
+mongoose.connect(DATABASE.dbUrl)
+    .then(() => {
+        console.log('Connected to MongoDB successfully');
+    })
+    .catch((error) => {
+        console.error('MongoDB connection error:', error);
+    });
+
 var Schema = mongoose.Schema;
+
 var blogSchema = new Schema({
     title: String,
-    author: {type: Schema.Types.ObjectId, ref:'facebookUsers'},
+    author: { type: Schema.Types.ObjectId, ref: 'facebookUsers' },
     body: String,
     excerption: String,
     category: String,
-    image: {type: Schema.ObjectId, ref: 'images'},
-    comments: [{body: String, date: Date}],
-    date: {type: Date, default: Date.now},
+    image: { type: Schema.ObjectId, ref: 'images' },
+    comments: [{ body: String, date: Date }],
+    date: { type: Date, default: Date.now },
     hidden: Boolean,
     meta: {
         votes: Number,
         favs: Number
     }
 });
+
 var categoriesSchema = new Schema({
-    name: {type: String, unique: true}
+    name: { type: String, unique: true }
 });
+
 var imageSchema = new Schema({
-    author: {type: Schema.Types.ObjectId, ref: 'facebookUsers'},
-    _post: {type: Schema.Types.ObjectId, ref: 'posts'},
+    author: { type: Schema.Types.ObjectId, ref: 'facebookUsers' },
+    _post: { type: Schema.Types.ObjectId, ref: 'posts' },
     name: String,
     size: String,
-    date: {type: Date, default: Date.now},
+    date: { type: Date, default: Date.now },
     path: String
 });
+
 var usersSchema = new Schema({
-    login: {type: String, unique: true},
+    login: { type: String, unique: true },
     password: String,
-    nickname: {type: String, unique: true},
+    nickname: { type: String, unique: true },
     email: String,
     date_of_birth: String,
     sex: String,
-    date: {type: Date, default: Date.now},
+    date: { type: Date, default: Date.now },
     avatar: String
 });
+
 var facebookSchema = new Schema({
-    id: {type: String, unique: true},
+    id: { type: String, unique: true },
     displayName: String
 });
 
