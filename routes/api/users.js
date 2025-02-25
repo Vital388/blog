@@ -2,17 +2,19 @@ var express = require('express');
 var router = express.Router();
 var model = require('../../model/db');
 var multiparty = require('multiparty');
-var Crypto=require('../../lib/random');
-var passport = require('passport')
-
-
-
+var Crypto = require('../../lib/random');
+var passport = require('passport');
+var os = require('os'); // Add this line to import the os module
 
 router.post('/signOn', function (req, res, next) {
-    var form = new multiparty.Form({autoFields: false, autoFiles: false});
+    var form = new multiparty.Form({
+        autoFields: false,
+        autoFiles: false,
+        uploadDir: os.tmpdir() // Explicitly set uploadDir to os.tmpdir()
+    });
     var user = [];
     form.on('close', function () {
-        var heshPass=Crypto.hashPassword(user['password']);
+        var heshPass = Crypto.hashPassword(user['password']);
         user = new model.users({
             login: user['login'],
             password: heshPass,
@@ -22,13 +24,13 @@ router.post('/signOn', function (req, res, next) {
             sex: user['sex'],
             avatar: user['avatar']
         });
-        user.save(function (err,data) {
-            if(!err){
-            res.send({id: data['_id']})
-            }else{
+        user.save(function (err, data) {
+            if (!err) {
+                res.send({ id: data['_id'] });
+            } else {
                 res.send(err);
             }
-        })
+        });
     });
     form.on('error', function (err) {
         console.log('Error parsing form: ' + err.stack);
@@ -37,29 +39,28 @@ router.post('/signOn', function (req, res, next) {
         user[name] = value;
     });
     form.on('part', function (part) {
-
         part.resume();
-
     });
 
     form.parse(req);
-
-
 });
+
 router.post('/signIn',
     passport.authenticate('local'),
-    function(req, res) {
-        res.cookie('user', JSON.stringify({nickname:req.user.nickname,_id:req.user._id}))
+    function (req, res) {
+        res.cookie('user', JSON.stringify({ nickname: req.user.nickname, _id: req.user._id }));
         res.send(200);
-    });
-router.get('/auth/facebook' ,passport.authenticate('facebook',{scope:'user_about_me'}));
+    }
+);
+
+router.get('/auth/facebook', passport.authenticate('facebook', { scope: 'user_about_me' }));
+
 router.get('/auth/facebook/callback',
     passport.authenticate('facebook'),
-    function(req,res){
+    function (req, res) {
         res.redirect('/');
-
-    });
-
+    }
+);
 
 /*
     var form = new multiparty.Form({autoFields: false, autoFiles: false});
@@ -70,11 +71,9 @@ router.get('/auth/facebook/callback',
             login: user['login'],
             password: heshPass
         }).exec(function (err, data) {
-
             if (data) {
-                res.send( data);
+                res.send(data);
             } else {
-
                 res.json(err);
             }
         });
@@ -86,23 +85,20 @@ router.get('/auth/facebook/callback',
         user[name] = value;
     });
     form.on('part', function (part) {
-
         part.resume();
-
     });
-
     form.parse(req);
-
 */
-router.get('/logout',
-    function(req, res) {
-        if(req.user) {
-            req.logout();
-            res.json({status:'ok'})
-        } else {
-            res.json({status: "Not logged in"});
-        }
-    });
 
+router.get('/logout',
+    function (req, res) {
+        if (req.user) {
+            req.logout();
+            res.json({ status: 'ok' });
+        } else {
+            res.json({ status: "Not logged in" });
+        }
+    }
+);
 
 module.exports = router;
