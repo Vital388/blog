@@ -1,22 +1,20 @@
-<h2>Sign In</h2>
-<div class="col-md-4">
-    <form ng-submit="signIn()" role="form" class="form-horizontal">
-        <div class="form-group">
-            <label for="login">Login</label>
-            <input type="text" ng-model="form.login" name="login" class="form-control"/>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4 offset-md-4">
+            <h2>Sign In</h2>
+            <form ng-submit="signIn()" role="form" class="form-horizontal">
+                <div class="form-group">
+                    <label for="login">Login</label>
+                    <input type="text" ng-model="form.login" name="login" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" ng-model="form.password" name="password" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <input class="btn btn-primary" type="submit" value="Enter"/>
+                </div>
+            </form>
         </div>
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" ng-model="form.password" name="password" class="form-control"/>
-        </div>
-        <div class="form-group">
-            <input class="btn" type="submit" value="Enter"/>
-        </div>
-    </form>
-    <p>
-        <a onclick="window.location='/api/users/auth/facebook'" class="btn btn-block btn-social btn-facebook">
-            <span class="fa fa-facebook"></span>
-            Sign in with Facebook
-        </a>
-    </p>
+    </div>
 </div>

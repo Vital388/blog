@@ -1,195 +1,208 @@
-/*
- * Globals
- */
-@font-face {
-    font-family: dayLater;
-    src: url(fonts/28_Days_Later.ttf);
-}
+/* Reset and Base Styles */
 body {
-    font-family: Georgia, "Times New Roman", Times, serif;
-    color: #555;
-}
-
-h1, .h1,
-h2, .h2,
-h3, .h3,
-h4, .h4,
-h5, .h5,
-h6, .h6 {
-    margin-top: 0;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-weight: normal;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
     color: #333;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+    padding-top: 70px; /* Space for fixed navbar */
 }
 
-
-/*
- * Override Bootstrap's default container.
- */
-
-@media (min-width: 1200px) {
-    .container {
-        width: 970px;
-    }
+::marker {
+    /* display: none !important; */
+    content: '';
 }
 
-
-/*
- * Masthead for nav
- */
-
+/* Navbar - Super Cool Edition */
 .blog-masthead {
-    background-color: #428bca;
-    -webkit-box-shadow: inset 0 -2px 5px rgba(0,0,0,.1);
-    box-shadow: inset 0 -2px 5px rgba(0,0,0,.1);
-    margin-bottom:20px;
+    background-color: #e9ecef; /* Slightly darker than bg-light for depth */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for a lifted look */
+}
+.navbar-brand {
+    font-size: 1.5rem; /* Larger for prominence */
+    font-weight: bold;
+    color: #007bff !important; /* Vibrant blue */
+    margin-right: 1rem;
+    transition: transform 0.3s ease; /* Smooth scaling */
+}
+.navbar-brand:hover {
+    transform: scale(1.05); /* Slight zoom on hover */
+}
+.nav-link {
+    padding: 0.5rem 1rem; /* Better touch targets */
+    color: #007bff !important; /* Matching blue theme */
+    transition: color 0.3s ease, background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+}
+.nav-link:hover {
+    color: #0056b3 !important; /* Darker blue on hover */
+    background-color: rgba(0, 123, 255, 0.1); /* Subtle highlight */
+    transform: translateY(-2px); /* Slight lift effect */
+}
+.navbar-text {
+    color: #6c757d; /* Gray to stand out without overpowering */
+    padding: 0.5rem 1rem;
+    font-style: italic; /* Adds personality */
+}
+.form-inline .form-control {
+    width: 200px; /* Usable width */
+    border-radius: 0.25rem 0 0 0.25rem; /* Rounded left corners */
+    border-color: #ced4da;
+    transition: border-color 0.3s ease;
+}
+.form-inline .form-control:focus {
+    border-color: #007bff; /* Highlight on focus */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Glow effect */
+}
+.form-inline .btn {
+    border-radius: 0 0.25rem 0.25rem 0; /* Rounded right corners */
+    background-color: #007bff;
+    border-color: #007bff;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.form-inline .btn:hover {
+    background-color: #0056b3; /* Darker on hover */
+    transform: scale(1.05); /* Slight zoom */
 }
 
-/* Nav links */
-.blog-nav-item {
-    position: relative;
-    display: inline-block;
-    padding: 10px;
-    font-weight: 500;
-    color: #cdddeb;
+/* Main Content */
+.container {
+    max-width: 1200px;
+    padding: 20px;
 }
-.blog-nav-item:hover,
-.blog-nav-item:focus {
-    color: #fff;
-    text-decoration: none;
-}
-
-/* Active state gets a caret at the bottom */
-.blog-nav .active {
-    color: #fff;
-}
-.blog-nav .active:after {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    width: 0;
-    height: 0;
-    margin-left: -5px;
-    vertical-align: middle;
-    content: " ";
-    border-right: 5px solid transparent;
-    border-bottom: 5px solid;
-    border-left: 5px solid transparent;
-}
-
-
-/*
- * Blog name and description
- */
-
-.blog-header {
-    padding-top: 20px;
-    padding-bottom: 20px;
-}
-.blog-title {
-    margin-top: 30px;
-    margin-bottom: 0;
-    font-size: 60px;
-    font-weight: normal;
-}
-.blog-description {
-    font-size: 20px;
-    color: #999;
-}
-
-
-/*
- * Main column and sidebar layout
- */
-
 .blog-main {
-    font-size: 18px;
-    line-height: 1.5;
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
-
-/* Sidebar modules for boxing content */
-.sidebar-module {
-    padding: 15px;
-    margin: 0 -15px 15px;
-}
-.sidebar-module-inset {
-    padding: 15px;
-    background-color: #f5f5f5;
-    border-radius: 4px;
-}
-.sidebar-module-inset p:last-child,
-.sidebar-module-inset ul:last-child,
-.sidebar-module-inset ol:last-child {
-    margin-bottom: 0;
-}
-
-
-/* Pagination */
-.pager {
-    margin-bottom: 60px;
-    text-align: left;
-}
-.pager > li > a {
-    width: 140px;
-    padding: 10px 20px;
-    text-align: center;
-    border-radius: 30px;
-}
-
-
-/*
- * Blog posts
- */
-
 .blog-post {
-    margin-bottom: 60px;
+    margin-bottom: 30px;
+    transition: box-shadow 0.3s ease, transform 0.3s ease; /* Smooth hover effects */
+}
+.blog-post:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Lifted shadow */
+    transform: scale(1.02); /* Slight zoom */
 }
 .blog-post-title {
-    margin-bottom: 5px;
-    font-size: 40px;
+    font-size: 1.75rem;
+    color: #2c3e50; /* Darker for readability */
+    transition: color 0.3s ease; /* Smooth color transition on hover */
+}
+.blog-post-title:hover {
+    color: #007bff; /* Blue on hover */
 }
 .blog-post-meta {
-    margin-bottom: 20px;
-    color: #999;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+.lead {
+    font-size: 1.1rem;
+}
+.blog-post img {
+    max-width: 100%; /* Ensure image doesn’t overflow */
+    height: auto;
+    border: 1px solid #dee2e6; /* Subtle border */
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Light shadow */
+    transition: transform 0.3s ease;
+}
+.blog-post img:hover {
+    transform: scale(1.03); /* Slight image zoom */
+}
+.post-actions {
+    margin-top: 15px;
+}
+.post-actions .btn {
+    padding: 0.5rem 1rem; /* Better touch targets */
 }
 
+/* Sidebar */
+.blog-sidebar {
+    padding: 20px;
+}
+.sidebar-module {
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.sidebar-module h4 {
+    color: #343a40;
+    border-bottom: 2px solid #007bff; /* Blue underline */
+    padding-bottom: 5px;
+}
+.list-unstyled li {
+    margin-bottom: 10px; /* Spacing for readability */
+}
+.list-unstyled li a {
+    color: #007bff;
+    transition: color 0.3s ease, padding-left 0.3s ease;
+}
+.list-unstyled li a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+    padding-left: 5px; /* Slight shift on hover */
+}
 
-/*
- * Footer
- */
+/* Forms */
+.form-group {
+    margin-bottom: 1.5rem; /* More space between fields */
+}
+.form-control {
+    border-radius: 4px;
+    border-color: #ced4da;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Focus glow */
+}
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.btn-primary:hover {
+    background-color: #0056b3;
+    transform: scale(1.05); /* Button pop */
+}
 
-.blog-footer {
-    padding: 40px 0;
-    color: #999;
-    text-align: center;
-    background-color: #f9f9f9;
-    border-top: 1px solid #e5e5e5;
+/* Pagination */
+.pagination-sm {
+    margin-top: 20px;
 }
-.blog-footer p:last-child {
-    margin-bottom: 0;
+.pagination-sm .page-item.active .page-link {
+    background-color: #007bff;
+    border-color: #007bff;
 }
-.inf-panel{
-    margin-top:5px;
-    color:#fff;
+.pagination-sm .page-link {
+    color: #007bff;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
-.logOut{
-    cursor: pointer;
+.pagination-sm .page-link:hover {
+    color: #0056b3;
+    background-color: #e9ecef;
+}
 
-}
-.logo
-{
-   background: url(/images/logo1.jpg);
-    height: 250px;
-    margin-bottom: 20px;
-}
-.logoText{
-    /*text-align: center;*/
-    position: relative;
-    color	:rgba(240, 255, 255, 0.9);
-    font-family: dayLater;
-    font-size: 55px;
-    letter-spacing		: 5px;
-    background-color: rgba(0, 96, 170, 0.9);
-    padding			: 10px;
-    top:150px;
+/* Responsive Adjustments */
+@media (max-width: 576px) {
+    .blog-main, .blog-sidebar {
+        padding: 10px; /* Less padding on small screens */
+    }
+    .blog-post-title {
+        font-size: 1.25rem; /* Smaller title */
+    }
+    .form-inline .form-control {
+        width: 100%; /* Full-width search input */
+        margin-bottom: 10px; /* Stack spacing */
+    }
+    .form-inline .btn {
+        width: 100%; /* Full-width button */
+    }
+    .navbar-brand {
+        font-size: 1.25rem; /* Slightly smaller on mobile */
+    }
+    .nav-link {
+        padding: 0.5rem 0.75rem; /* Adjust padding for mobile */
+    }
 }

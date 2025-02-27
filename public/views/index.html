@@ -1,12 +1,5 @@
 <div class="row">
     <div class="col-md-8 blog-main">
-        <div class="logo">
-            <span class="logoText">
-
-                BestBLOG
-
-            </span>
-        </div>
         <div ng-repeat="post in posts" class="div">
             <div class="blog-post">
                 <h2 class="blog-post-title">{{post.title}}</h2>
@@ -16,23 +9,25 @@
                 <h3>{{post.category}}</h3>
                 </p>
                 <p class="blog-post-meta">{{post.date | date:'medium'}} Author {{post.author.displayName}}</p>
-                <image ng-src="{{post.image.path}}" class="img-responsive img-rounded"></image>
+                <img ng-src="{{post.image.path}}" class="img-fluid rounded" alt="Post image">
                 <p class="lead" ng-bind-html="post.excerption">
                 </p>
-                <ul class="pager">
-                    <li><a href="/readPost/{{post._id}}">Read post</a></li>
-                </ul>
+                <div class="post-actions">
+                    <a href="/readPost/{{post._id}}" class="btn btn-primary">Read Post</a>
+                </div>
             </div>
         </div>
-        <uib-pagination ng-show="ShowPagination" ng-change="pageChanged()" items-per-page="itemsPerPage" boundary-links="true"
-                        total-items="totalItems" ng-model="currentPage" class="pagination-sm" previous-text="&lsaquo;"
-                        next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></uib-pagination>
+        <div class="d-flex justify-content-center">
+            <uib-pagination ng-show="ShowPagination" ng-change="pageChanged()" items-per-page="itemsPerPage" boundary-links="true"
+                            total-items="totalItems" ng-model="currentPage" class="pagination-sm" previous-text="‹"
+                            next-text="›" first-text="«" last-text="»"></uib-pagination>
+        </div>
     </div>
-    <div class="col-md-3 col-md-offset-1 blog-sidebar">
+    <div class="col-md-3 offset-md-1 blog-sidebar">
         <div class="sidebar-module" ng-controller="categoriesCtrl">
             <h4>Categories</h4>
-            <ol class="list-unstyled" ng-repeat="category in categories">
-                <li><a href="/categories/{{category.name}}">{{category.name}}</a></li>
+            <ol class="list-unstyled">
+                <li ng-repeat="category in categories"><a href="/categories/{{category.name}}">{{category.name}}</a></li>
             </ol>
         </div>
     </div>
