@@ -1,15 +1,85 @@
 <!DOCTYPE html>
-<html ng-app="blog">
+<html ng-app="blog" lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="A modern, feature-rich blog platform for sharing ideas and stories">
+    <meta name="theme-color" content="#121212">
+    <meta name="author" content="BestBlog Team">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-    <title>BestBLog</title>
+    <title>BestBlog | Modern Blogging Platform</title>
     <base href="/">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
 </head>
-<body>
-<div ng-controller="navBlogCtrl" ng-include="" src="'views/navbar.html'"></div>
-<div ng-view class="container"></div>
+<body class="dark-theme">
+    <!-- Navbar -->
+    <div ng-controller="navBlogCtrl" ng-include="" src="'views/navbar.html'"></div>
+    
+    <!-- Loading animation (shows when route is changing) -->
+    <div class="loading" ng-show="$root.loading">
+        <div class="loading-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div ng-view class="container"></div>
+    
+    <!-- Footer -->
+    <footer class="blog-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <a href="/" class="footer-logo">
+                        <i class="fa fa-feather-alt"></i>
+                        <span>BEST<span class="highlight">BLOG</span></span>
+                    </a>
+                    <p class="footer-tagline">A modern blogging platform for sharing your thoughts and ideas with the world.</p>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="footer-section">
+                        <h4>Navigation</h4>
+                        <ul>
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/about">About</a></li>
+                            <li><a href="/contact">Contact</a></li>
+                            <li><a href="/categories">Categories</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="/privacy">Privacy Policy</a></li>
+                            <li><a href="/terms">Terms of Service</a></li>
+                            <li><a href="/cookies">Cookie Policy</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Connect</h4>
+                        <div class="social-links">
+                            <a href="#" class="social-link"><i class="fa fa-twitter"></i></a>
+                            <a href="#" class="social-link"><i class="fa fa-facebook"></i></a>
+                            <a href="#" class="social-link"><i class="fa fa-instagram"></i></a>
+                            <a href="#" class="social-link"><i class="fa fa-github"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2023 BestBlog. All rights reserved.</p>
+                <p>Made with <i class="fa fa-heart"></i> and modern technologies</p>
+            </div>
+        </div>
+    </footer>
 </body>
 <script src="/jquery/dist/jquery.min.js"></script>
 <script src="/angular/angular.min.js"></script>

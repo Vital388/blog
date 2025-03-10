@@ -1,17 +1,19 @@
 <nav class="navbar fixed-top navbar-expand-lg">
     <div class="container">
-        <a class="navbar-brand" href="/">BESTBLOG</a>
+        <a class="navbar-brand" href="/">
+            <span class="logo-text">BEST<span class="highlight">BLOG</span></span>
+        </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+            <i class="fa fa-bars"></i>
         </button>
         
         <div class="collapse navbar-collapse" id="navbarContent" ng-controller="navBlogCtrl">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
-                <li class="nav-item"><a href="/about" class="nav-link">About</a></li>
-                <li class="nav-item"><a href="/categories" class="nav-link">Categories</a></li>
+                <li class="nav-item"><a href="/" class="nav-link"><i class="fa fa-home nav-icon"></i> Home</a></li>
+                <li class="nav-item"><a href="/about" class="nav-link"><i class="fa fa-info-circle nav-icon"></i> About</a></li>
+                <li class="nav-item"><a href="/categories" class="nav-link"><i class="fa fa-tag nav-icon"></i> Categories</a></li>
                 <li class="nav-item" ng-show="currentUser.nickname">
-                    <a href="/dashboard/{{currentUser.nickname}}" class="nav-link">My Articles</a>
+                    <a href="/dashboard/{{currentUser.nickname}}" class="nav-link"><i class="fa fa-newspaper-o nav-icon"></i> My Articles</a>
                 </li>
             </ul>
 
@@ -25,16 +27,21 @@
             </form>
 
             <div class="nav-auth" ng-hide="currentUser.nickname">
-                <a href="/signIn" class="nav-link login-link">Log In</a>
+                <a href="/signIn" class="nav-link login-link"><i class="fa fa-sign-in"></i> Log In</a>
                 <a href="/signOn" class="nav-link signup-link">Sign Up</a>
             </div>
 
             <div class="user-menu" ng-show="currentUser.nickname">
                 <div class="user-info">
-                    <span class="user-greeting">Hello, {{currentUser.nickname}}</span>
-                    <a href="#" class="nav-link logout-link" ng-click="logout()">
-                        <i class="fa fa-sign-out"></i> Log Out
-                    </a>
+                    <div class="user-avatar">
+                        <i class="fa fa-user-circle"></i>
+                    </div>
+                    <div class="user-details">
+                        <span class="user-greeting">Hello, <span class="highlight">{{currentUser.nickname}}</span></span>
+                        <a href="#" class="nav-link logout-link" ng-click="logout()">
+                            <i class="fa fa-sign-out"></i> Log Out
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
