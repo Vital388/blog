@@ -9,7 +9,9 @@
                 <h3>{{post.category}}</h3>
                 </p>
                 <p class="blog-post-meta">{{post.date | date:'medium'}} Author {{post.author.displayName}}</p>
-                <img ng-src="{{post.image.path}}" class="img-fluid rounded" alt="Post image">
+                <div class="post-image-container" ng-if="post.image.path">
+                    <img ng-src="{{post.image.path}}" class="img-fluid rounded" alt="Post image">
+                </div>
                 <p class="lead" ng-bind-html="post.excerption">
                 </p>
                 <div class="post-actions">

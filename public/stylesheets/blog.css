@@ -72,8 +72,11 @@ body {
     background-image: linear-gradient(to bottom right, #121212, #1a1a1a, #121212);
     background-attachment: fixed;
     line-height: 1.6;
-    padding-top: 80px; /* space for fixed navbar */
+    padding-top: 70px; /* space for fixed navbar */
     min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 .dark-theme {
@@ -89,11 +92,19 @@ body {
     box-shadow: var(--shadow-lg);
     height: 70px;
     transition: var(--transition);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1030;
 }
 
 .navbar .container {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    height: 70px;
 }
 
 .navbar-brand {
@@ -237,6 +248,7 @@ body {
     width: 260px;
     box-shadow: var(--glow);
     outline: none;
+    z-index: 10; /* Ensure it's above other elements when focused */
 }
 
 .search-button {
@@ -378,9 +390,11 @@ body {
 /* Main container */
 .container {
     max-width: 1200px;
-    margin: 2rem auto;
+    width: 100%;
+    margin: 1.5rem auto;
     padding: 0 1.5rem;
     animation: fadeIn 0.6s ease-out;
+    flex: 1 0 auto; /* Allow container to grow but not shrink */
 }
 
 /* Loading Animation */
@@ -446,7 +460,8 @@ body {
     box-shadow: var(--shadow);
     margin-bottom: 2.5rem;
     position: relative;
-    overflow: hidden;
+    overflow: visible; /* Changed from hidden to allow elements to be fully visible */
+    width: 100%;
 }
 
 /* Decorative elements */
@@ -464,13 +479,14 @@ body {
 /* Blog Post */
 .blog-post {
     padding: 1.5rem;
-    margin: 0 -1.5rem 2.5rem -1.5rem;
+    margin: 0 0 2.5rem 0;
     border-radius: var(--radius);
     transition: all var(--transition);
     position: relative;
     border: 1px solid transparent;
     animation: fadeIn 0.8s ease-out;
     animation-fill-mode: both;
+    overflow: visible; /* Allow hover effects to be visible */
 }
 
 .blog-post:nth-child(2) {
@@ -546,17 +562,26 @@ body {
 }
 
 /* Images */
+/* Only display images that exist */
+.blog-post .post-image-container {
+    margin-bottom: 1.5rem;
+    position: relative;
+    min-height: 0; /* Don't take space if empty */
+}
+
 .blog-post img {
     width: 100%;
     height: auto;
+    max-height: 400px; /* Limit height to avoid excessive space */
+    object-fit: cover;
     border-radius: var(--radius);
     border: 1px solid var(--border);
-    margin-bottom: 1.5rem;
     transition: all var(--transition);
     filter: brightness(0.95);
     box-shadow: var(--shadow-sm);
     position: relative;
     animation: fadeIn 1s ease-out;
+    display: block; /* Only display if image exists */
 }
 
 /* Featured Image Overlay */
@@ -864,6 +889,12 @@ body {
     margin-bottom: 3rem;
 }
 
+/* Make sure footer stays at the bottom */
+.blog-footer {
+    flex-shrink: 0;
+    margin-top: auto;
+}
+
 .footer-brand {
     flex: 1 1 300px;
 }
@@ -1009,6 +1040,29 @@ body {
     .nav-auth {
         margin-left: 0.5rem;
     }
+    
+    .navbar-collapse {
+        position: absolute;
+        top: 70px;
+        left: 0;
+        right: 0;
+        background-color: rgba(20, 20, 20, 0.95);
+        padding: 1rem;
+        box-shadow: var(--shadow);
+        border-bottom: 1px solid var(--border);
+        z-index: 1020;
+    }
+    
+    .navbar-nav {
+        flex-direction: column;
+        width: 100%;
+        padding: 0.5rem 0;
+    }
+    
+    .nav-link {
+        padding: 0.75rem 1rem;
+        width: 100%;
+    }
 }
 
 @media (max-width: 768px) {
@@ -1023,6 +1077,11 @@ body {
     
     .navbar .container {
         flex-wrap: wrap;
+        padding: 0 1rem;
+    }
+    
+    .blog-post {
+        overflow: hidden; /* Prevent content from spilling out */
     }
     
     .blog-main {
