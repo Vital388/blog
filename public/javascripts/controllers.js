@@ -363,6 +363,68 @@ angular.module('blog')
     .controller('navBlogCtrl', function($scope, $location, $rootScope, $http) {
         console.log('Current User:', $rootScope.currentUser);
 
+        // Toggle navbar functionality for mobile menu
+        $scope.isNavCollapsed = true;
+        
+        $scope.toggleNavbar = function() {
+            $scope.isNavCollapsed = !$scope.isNavCollapsed;
+            var mobileMenu = document.getElementById('navbarContent');
+            if (mobileMenu) {
+                if (!$scope.isNavCollapsed) {
+                    mobileMenu.classList.add('show');
+                    // Clone main navbar content into mobile menu for mobile display
+                    if (mobileMenu.children.length === 0) {
+                        var linksClone = document.querySelector('.navbar-links').cloneNode(true);
+                        var searchClone = document.querySelector('.search-form').cloneNode(true);
+                        var authClone = document.querySelector('.auth-nav').cloneNode(true);
+                        
+                        mobileMenu.appendChild(linksClone);
+                        mobileMenu.appendChild(searchClone);
+                        mobileMenu.appendChild(authClone);
+                    }
+                } else {
+                    mobileMenu.classList.remove('show');
+                }
+            }
+        };
+
+        // Close navbar when clicking outside or on a nav link in mobile view
+        $scope.closeNavbar = function() {
+            if (!$scope.isNavCollapsed) {
+                $scope.isNavCollapsed = true;
+                var mobileMenu = document.getElementById('navbarContent');
+                if (mobileMenu) {
+                    mobileMenu.classList.remove('show');
+                }
+            }
+        };
+        
+        // Add event listener to close navbar when clicking outside
+        document.addEventListener('click', function(event) {
+            var navbar = document.querySelector('.navbar');
+            var toggleButton = document.querySelector('.navbar-toggler');
+            
+            if (navbar && !navbar.contains(event.target) || 
+                (event.target.classList.contains('nav-link') && window.innerWidth <= 992)) {
+                $scope.$apply(function() {
+                    $scope.closeNavbar();
+                });
+            }
+        });
+
+        // Logout functionality
+        $scope.logout = function() {
+            $http.get('/api/users/logout')
+                .success(function() {
+                    $rootScope.currentUser = null;
+                    $location.path('/');
+                })
+                .error(function(error) {
+                    console.error('Error during logout:', error);
+                    alert('Failed to logout. Please try again.');
+                });
+        };
+
         $scope.search = function() {
             if ($scope.searchQuery) {
                 $http.get('/api/posts/search?q=' + encodeURIComponent($scope.searchQuery))
@@ -377,7 +439,19 @@ angular.module('blog')
                     });
             }
         };
+        
         $scope.getClass = function(path) {
             return $location.path() === path ? 'active' : '';
         };
+
+        // Initialize event listeners for document click to close navbar
+        angular.element(document).ready(function() {
+            document.addEventListener('click', function(event) {
+                // Check if click is outside navbar and navbar is open
+                if (!event.target.closest('.navbar') && !$scope.isNavCollapsed) {
+                    $scope.closeNavbar();
+                    $scope.$apply(); // Apply the scope changes
+                }
+            });
+        });
     });

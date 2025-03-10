@@ -28,9 +28,14 @@
     <div class="col-md-3 offset-md-1 blog-sidebar">
         <div class="sidebar-module" ng-controller="categoriesCtrl">
             <h4>Categories</h4>
-            <ol class="list-unstyled">
-                <li ng-repeat="category in categories"><a href="/categories/{{category.name}}">{{category.name}}</a></li>
-            </ol>
+            <ul class="categories-list">
+                <li class="category-item" ng-repeat="category in categories">
+                    <a href="/categories/{{category.name}}">
+                        {{category.name}}
+                        <span class="category-count" ng-if="category.count">{{category.count}}</span>
+                    </a>
+                </li>
+            </ul>
         </div>
     </div>
 </div>

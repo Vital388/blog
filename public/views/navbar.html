@@ -1,49 +1,55 @@
 <nav class="navbar fixed-top navbar-expand-lg">
     <div class="container">
+        <!-- Brand logo -->
         <a class="navbar-brand" href="/">
             <span class="logo-text">BEST<span class="highlight">BLOG</span></span>
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-            <i class="fa fa-bars"></i>
-        </button>
         
-        <div class="collapse navbar-collapse" id="navbarContent" ng-controller="navBlogCtrl">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a href="/" class="nav-link"><i class="fa fa-home nav-icon"></i> Home</a></li>
-                <li class="nav-item"><a href="/about" class="nav-link"><i class="fa fa-info-circle nav-icon"></i> About</a></li>
-                <li class="nav-item"><a href="/categories" class="nav-link"><i class="fa fa-tag nav-icon"></i> Categories</a></li>
-                <li class="nav-item" ng-show="currentUser.nickname">
-                    <a href="/dashboard/{{currentUser.nickname}}" class="nav-link"><i class="fa fa-newspaper-o nav-icon"></i> My Articles</a>
-                </li>
-            </ul>
+        <!-- Simple horizontal navigation links -->
+        <div class="nav-menu" ng-controller="navBlogCtrl">
+            <a href="/" class="nav-link"><i class="fa fa-home nav-icon"></i> Home</a>
+            <a href="/about" class="nav-link"><i class="fa fa-info-circle nav-icon"></i> About</a>
+            <a href="/categories" class="nav-link"><i class="fa fa-tag nav-icon"></i> Categories</a>
+            <a href="/dashboard/{{currentUser.nickname}}" class="nav-link" ng-show="currentUser.nickname">
+                <i class="fa fa-newspaper-o nav-icon"></i> My Articles
+            </a>
+        </div>
 
-            <form class="search-form" ng-submit="search()">
-                <div class="search-wrapper">
-                    <input class="search-input" type="search" placeholder="Search articles..." aria-label="Search" ng-model="searchQuery">
-                    <button class="search-button" type="submit">
-                        <i class="fa fa-search"></i>
-                    </button>
-                </div>
-            </form>
-
-            <div class="nav-auth" ng-hide="currentUser.nickname">
-                <a href="/signIn" class="nav-link login-link"><i class="fa fa-sign-in"></i> Log In</a>
-                <a href="/signOn" class="nav-link signup-link">Sign Up</a>
+        <!-- Search form -->
+        <form class="search-form" ng-submit="search()" ng-controller="navBlogCtrl">
+            <div class="search-wrapper">
+                <input class="search-input" type="search" placeholder="Search..." aria-label="Search" ng-model="searchQuery">
+                <button class="search-button" type="submit">
+                    <i class="fa fa-search"></i>
+                </button>
             </div>
+        </form>
 
-            <div class="user-menu" ng-show="currentUser.nickname">
-                <div class="user-info">
-                    <div class="user-avatar">
-                        <i class="fa fa-user-circle"></i>
-                    </div>
-                    <div class="user-details">
-                        <span class="user-greeting">Hello, <span class="highlight">{{currentUser.nickname}}</span></span>
-                        <a href="#" class="nav-link logout-link" ng-click="logout()">
-                            <i class="fa fa-sign-out"></i> Log Out
-                        </a>
-                    </div>
-                </div>
+        <!-- User authentication area -->
+        <div class="auth-area" ng-controller="navBlogCtrl">
+            <!-- Login/Signup links when not logged in -->
+            <div class="auth-buttons" ng-hide="currentUser.nickname">
+                <a href="/signIn" class="nav-link"><i class="fa fa-sign-in nav-icon"></i> Log In</a>
+                <a href="/signOn" class="nav-link"><i class="fa fa-user-plus nav-icon"></i> Sign Up</a>
+            </div>
+            
+            <!-- User info and logout when logged in -->
+            <div class="user-profile" ng-show="currentUser.nickname">
+                <span class="user-name"><i class="fa fa-user-circle nav-icon"></i> {{currentUser.nickname}}</span>
+                <a href="javascript:void(0)" class="nav-link logout-link" ng-click="logout()">
+                    <i class="fa fa-sign-out nav-icon"></i> Log Out
+                </a>
             </div>
         </div>
+        
+        <!-- Mobile toggle button -->
+        <button class="navbar-toggler" type="button" ng-click="toggleNavbar()" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="fa fa-bars"></i>
+        </button>
+    </div>
+    
+    <!-- Mobile menu for smaller screens -->
+    <div class="mobile-menu collapse navbar-collapse" id="navbarContent">
+        <!-- Mobile menu content will be populated by JavaScript -->
     </div>
 </nav>
