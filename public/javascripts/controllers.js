@@ -360,8 +360,23 @@ angular.module('blog')
                 });
         };
     })
-    .controller('navBlogCtrl', function($scope, $location, $rootScope) {
+    .controller('navBlogCtrl', function($scope, $location, $rootScope, $http) {
         console.log('Current User:', $rootScope.currentUser);
+
+        $scope.search = function() {
+            if ($scope.searchQuery) {
+                $http.get('/api/posts/search?q=' + encodeURIComponent($scope.searchQuery))
+                    .success(function(data) {
+                        $rootScope.searchResults = data.posts;
+                        $rootScope.searchQuery = $scope.searchQuery;
+                        $location.path('/search');
+                    })
+                    .error(function(error) {
+                        console.error('Error searching posts:', error);
+                        alert('Failed to search posts. Please try again.');
+                    });
+            }
+        };
         $scope.getClass = function(path) {
             return $location.path() === path ? 'active' : '';
         };

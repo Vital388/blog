@@ -51,6 +51,47 @@ router.get('/categories', async function (req, res, next) {
     }
 });
 
+// GET /search
+router.get('/search', async function (req, res, next) {
+    try {
+        const searchQuery = req.query.q;
+        const pageNumber = parseInt(req.query.page || 1);
+        const resultsPerPage = parseInt(req.query.resultsPerPage || 5);
+        const skipFrom = (pageNumber * resultsPerPage) - resultsPerPage;
+
+        if (!searchQuery) {
+            return res.status(400).json({ error: 'Search query is required' });
+        }
+
+        const searchRegex = new RegExp(searchQuery, 'i');
+        const count = await model.posts.countDocuments({
+            $or: [
+                { title: searchRegex },
+                { body: searchRegex },
+                { excerption: searchRegex }
+            ]
+        });
+
+        const data = await model.posts.find({
+            $or: [
+                { title: searchRegex },
+                { body: searchRegex },
+                { excerption: searchRegex }
+            ]
+        })
+            .skip(skipFrom)
+            .limit(resultsPerPage)
+            .populate('image', 'path')
+            .populate('author', 'displayName')
+            .sort('-date')
+            .exec();
+
+        res.json({ posts: data, pages_count: count });
+    } catch (err) {
+        next(err);
+    }
+});
+
 // GET /:postId
 router.get('/:postId', async function (req, res, next) {
     try {

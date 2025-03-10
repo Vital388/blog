@@ -47,6 +47,13 @@ config(['$routeProvider', '$locationProvider', function ($routeProvider, $locati
     when('/about', {
         templateUrl: '/views/about.html',
     }).
+    when('/search', {
+        templateUrl: '/views/search.html',
+        controller: function($scope, $rootScope) {
+            $scope.searchQuery = $rootScope.searchQuery;
+            $scope.searchResults = $rootScope.searchResults;
+        }
+    }).
     otherwise({
         redirectTo: '/'
     });

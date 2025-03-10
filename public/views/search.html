@@ -1,0 +1,19 @@
+<div class="blog-main">
+    <h2 class="blog-post-title">Search Results for "{{searchQuery}}"</h2>
+    <div ng-if="searchResults && searchResults.length > 0">
+        <div class="blog-post" ng-repeat="post in searchResults">
+            <h3 class="blog-post-title">
+                <a href="/readPost/{{post._id}}">{{post.title}}</a>
+            </h3>
+            <p class="blog-post-meta">
+                {{post.date | date:'MMM d, yyyy'}} by 
+                <a href="/dashboard/{{post.author.displayName}}">{{post.author.displayName}}</a>
+            </p>
+            <p class="lead">{{post.excerption}}</p>
+            <a href="/readPost/{{post._id}}" class="btn btn-primary">Read More</a>
+        </div>
+    </div>
+    <div ng-if="searchResults && searchResults.length === 0" class="alert alert-info">
+        <p>No posts found matching your search query.</p>
+    </div>
+</div>
